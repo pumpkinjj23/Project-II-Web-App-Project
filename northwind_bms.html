@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northwind BMS — ระบบจัดการข้อมูลธุรกิจ</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Custom Theme CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============================================================== -->
+<!-- TOP SCREEN SWITCHER (แถบสลับหน้าจอ 12 หน้าจอสำหรับการนำเสนอและตรวจงาน) -->
+<!-- ============================================================== -->
+<div id="screen-nav-bar">
+    <button class="screen-tab-btn" data-screen="login">🔐 01 เข้าสู่ระบบ</button>
+    <button class="screen-tab-btn active" data-screen="dashboard">📊 02 แดชบอร์ด</button>
+    <button class="screen-tab-btn" data-screen="products">📦 03 สินค้า</button>
+    <button class="screen-tab-btn" data-screen="product-form">➕ 04 เพิ่ม/แก้ไขสินค้า</button>
+    <button class="screen-tab-btn" data-screen="categories">🗂 05 หมวดหมู่</button>
+    <button class="screen-tab-btn" data-screen="orders">🛒 06 คำสั่งซื้อ</button>
+    <button class="screen-tab-btn" data-screen="order-detail">🧾 07 รายละเอียดคำสั่งซื้อ</button>
+    <button class="screen-tab-btn" data-screen="customers">👥 08 ลูกค้า</button>
+    <button class="screen-tab-btn" data-screen="suppliers">🏭 09 ผู้จัดจำหน่าย</button>
+    <button class="screen-tab-btn" data-screen="employees">👤 10 พนักงาน</button>
+    <button class="screen-tab-btn" data-screen="shippers">🚚 11 บริษัทขนส่ง</button>
+    <button class="screen-tab-btn" data-screen="reports">📈 12 รายงาน</button>
+    <a href="api-docs.html" class="screen-tab-btn text-decoration-none" target="_blank" style="background:#3b82f6;color:#fff;">📑 API Docs</a>
+    <a href="setup_db.php" class="screen-tab-btn text-decoration-none" target="_blank">⚙️ DB Setup</a>
+</div>
+
+<!-- ============================================================== -->
+<!-- APP SHELL: SIDEBAR & MAIN VIEW                                 -->
+<!-- ============================================================== -->
+<div class="shell">
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-mark">NW</div>
+            <div>
+                <div class="logo-text">Northwind BMS</div>
+                <div class="logo-sub">ระบบจัดการธุรกิจ</div>
+            </div>
+        </div>
+        <div class="nav-scroll">
+            <div class="nav-group">
+                <div class="nav-label">หน้าหลัก</div>
+                <button class="sidebar-nav-item active" data-screen="dashboard">
+                    <span class="nav-icon">📊</span> แดชบอร์ด
+                </button>
+            </div>
+            <div class="nav-group">
+                <div class="nav-label">คลังสินค้า</div>
+                <button class="sidebar-nav-item" data-screen="products">
+                    <span class="nav-icon">📦</span> สินค้า
+                </button>
+                <button class="sidebar-nav-item" data-screen="categories">
+                    <span class="nav-icon">🗂</span> หมวดหมู่สินค้า
+                </button>
+            </div>
+            <div class="nav-group">
+                <div class="nav-label">การขาย</div>
+                <button class="sidebar-nav-item" data-screen="orders">
+                    <span class="nav-icon">🛒</span> คำสั่งซื้อ
+                </button>
+                <button class="sidebar-nav-item" data-screen="customers">
+                    <span class="nav-icon">👥</span> ลูกค้า
+                </button>
+            </div>
+            <div class="nav-group">
+                <div class="nav-label">ห่วงโซ่อุปทาน</div>
+                <button class="sidebar-nav-item" data-screen="suppliers">
+                    <span class="nav-icon">🏭</span> ผู้จัดจำหน่าย
+                </button>
+                <button class="sidebar-nav-item" data-screen="shippers">
+                    <span class="nav-icon">🚚</span> บริษัทขนส่ง
+                </button>
+            </div>
+            <div class="nav-group">
+                <div class="nav-label">บุคลากร</div>
+                <button class="sidebar-nav-item" data-screen="employees">
+                    <span class="nav-icon">👤</span> พนักงาน
+                </button>
+            </div>
+            <div class="nav-group">
+                <div class="nav-label">วิเคราะห์</div>
+                <button class="sidebar-nav-item" data-screen="reports">
+                    <span class="nav-icon">📈</span> รายงาน
+                </button>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <div class="user-card mb-2">
+                <div class="avatar">วช</div>
+                <div>
+                    <div class="user-name user-display-name">วชิรา ล.</div>
+                    <div class="user-role user-display-role">ผู้ดูแลระบบ</div>
+                </div>
+            </div>
+            <button class="btn btn-sm btn-outline-danger w-100" onclick="App.logout()">🚪 ออกจากระบบ</button>
+        </div>
+    </aside>
+
+    <!-- MAIN VIEW -->
+    <main class="app-main">
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="breadcrumb-custom">
+                <span>Northwind BMS</span>
+                <span class="sep">›</span>
+                <span id="topbar-breadcrumb-cur" class="cur">แดชบอร์ดภาพรวม</span>
+            </div>
+            <div class="topbar-right">
+                <div class="search-box-wrap">
+                    <span>🔍</span>
+                    <input type="text" placeholder="ค้นหาด่วน...">
+                </div>
+                <button id="btn-theme-toggle" class="icon-btn" title="เปลี่ยนโหมดมืด/สว่าง">🌓</button>
+                <a href="api-docs.html" target="_blank" class="icon-btn text-decoration-none" title="API Documentation">📑</a>
+                <a href="setup_db.php" target="_blank" class="icon-btn text-decoration-none" title="ฐานข้อมูล">⚙️</a>
+            </div>
+        </header>
+
+        <!-- ============================================================== -->
+        <!-- SCREEN 01: LOGIN (เข้าสู่ระบบ · JWT Auth)                       -->
+        <!-- ============================================================== -->
+        <div id="screen-login" class="screen-view">
+            <div class="login-wrapper">
+                <div class="login-box">
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="logo-mark" style="width:44px;height:44px;font-size:18px;border-radius:10px">NW</div>
+                        <div>
+                            <div class="fs-5 fw-bold text-dark-emphasis">Northwind BMS</div>
+                            <div class="small text-muted">ระบบจัดการธุรกิจ RESTful API</div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <h4 class="fw-bold mb-1">ยินดีต้อนรับ 👋</h4>
+                        <p class="text-muted small">กรุณาเข้าสู่ระบบด้วย JWT Authentication เพื่อดำเนินการต่อ</p>
+                    </div>
+                    <form id="login-form">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">อีเมล / ชื่อผู้ใช้</label>
+                            <input id="login-email" class="form-control" type="text" value="admin@northwind.co.th" required>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label small fw-bold mb-0">รหัสผ่าน</label>
+                                <a href="javascript:void(0)" class="small text-decoration-none" onclick="Swal.fire('ลืมรหัสผ่าน', 'กรุณาติดต่อผู้ดูแลระบบเพื่อรีเซ็ตรหัสผ่าน', 'info')">ลืมรหัสผ่าน?</a>
+                            </div>
+                            <input id="login-password" class="form-control" type="password" value="admin123" required>
+                        </div>
+                        <div class="mb-4 form-check">
+                            <input type="checkbox" class="form-check-input" id="login-remember" checked>
+                            <label class="form-check-label small" for="login-remember">จดจำการเข้าสู่ระบบ 24 ชั่วโมง</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">🔐 เข้าสู่ระบบ</button>
+                    </form>
+                    <div class="mt-4 pt-3 border-top text-muted small d-flex align-items-center gap-2">
+                        <span>🔒</span>
+                        <span>ระบบป้องกันด้วย JWT · รองรับการทำงานร่วมกับฐานข้อมูล MySQL</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SCREEN 02: DASHBOARD (แดชบอร์ดภาพรวม)                            -->
+        <!-- ============================================================== -->
+        <div id="screen-dashboard" class="screen-view active">
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <div class="page-title">แดชบอร์ดภาพรวม</div>
+                        <div class="page-desc">ข้อมูล ณ ปัจจุบัน · อัปเดตแบบเรียลไทม์</div>
+                    </div>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="App.loadDashboard()">🔄 รีเฟรชข้อมูล</button>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-label">คำสั่งซื้อทั้งหมด</div>
+                            <div id="dash-kpi-orders" class="kpi-value">196</div>
+                            <div class="kpi-trend up">▲ 12% จากเดือนก่อน</div>
+                        </div>
+                        <div class="kpi-icon" style="background:#DBEAFE">🛒</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-label">รายการสินค้า</div>
+                            <div id="dash-kpi-products" class="kpi-value">79</div>
+                            <div class="kpi-trend text-muted">— คงที่</div>
+                        </div>
+                        <div class="kpi-icon" style="background:#DCFCE7">📦</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-label">จำนวนลูกค้า</div>
+                            <div id="dash-kpi-customers" class="kpi-value">91</div>
+                            <div class="kpi-trend up">▲ 5 รายใหม่</div>
+                        </div>
+                        <div class="kpi-icon" style="background:#FEF3C7">👥</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-label">ผู้จัดจำหน่าย</div>
+                            <div id="dash-kpi-suppliers" class="kpi-value">29</div>
+                            <div class="kpi-trend text-muted">— คงที่</div>
+                        </div>
+                        <div class="kpi-icon" style="background:#F3E8FF">🏭</div>
+                    </div>
+                </div>
+
+                <!-- Charts & Progress Row -->
+                <div class="row g-3 mb-4">
+                    <div class="col-lg-6">
+                        <div class="bms-card h-100">
+                            <div class="bms-card-title">📊 คำสั่งซื้อรายเดือน (ปี 2540)</div>
+                            <div class="bar-chart">
+                                <div class="bar-wrap"><div class="bar-col" style="height:38px"></div><div class="bar-lbl">เม.ย</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:52px"></div><div class="bar-lbl">พ.ค</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:44px"></div><div class="bar-lbl">มิ.ย</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:60px"></div><div class="bar-lbl">ก.ค</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:56px"></div><div class="bar-lbl">ส.ค</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:70px"></div><div class="bar-lbl">ก.ย</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:64px"></div><div class="bar-lbl">ต.ค</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:76px"></div><div class="bar-lbl">พ.ย</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:68px"></div><div class="bar-lbl">ธ.ค</div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="bms-card h-100">
+                            <div class="bms-card-title">🏆 หมวดหมู่ยอดนิยม</div>
+                            <div class="prog-row"><div class="prog-label"><span>เครื่องดื่ม</span><span class="fw-bold">12 รายการ</span></div><div class="prog-bar"><div class="prog-fill" style="width:75%"></div></div></div>
+                            <div class="prog-row"><div class="prog-label"><span>เครื่องปรุงรส</span><span class="fw-bold">13 รายการ</span></div><div class="prog-bar"><div class="prog-fill" style="width:82%"></div></div></div>
+                            <div class="prog-row"><div class="prog-label"><span>ขนมหวาน</span><span class="fw-bold">7 รายการ</span></div><div class="prog-bar"><div class="prog-fill" style="width:44%"></div></div></div>
+                            <div class="prog-row"><div class="prog-label"><span>เนื้อสัตว์</span><span class="fw-bold">6 รายการ</span></div><div class="prog-bar"><div class="prog-fill" style="width:38%"></div></div></div>
+                            <div class="prog-row"><div class="prog-label"><span>อาหารทะเล</span><span class="fw-bold">8 รายการ</span></div><div class="prog-bar"><div class="prog-fill" style="width:50%"></div></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="bms-card p-0">
+                    <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                        <div class="fw-bold">🕐 คำสั่งซื้อล่าสุด</div>
+                        <button class="btn btn-sm btn-link text-decoration-none" onclick="App.showScreen('orders')">ดูทั้งหมด →</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="bms-table">
+                            <thead>
+                                <tr>
+                                    <th>เลขที่คำสั่งซื้อ</th>
+                                    <th>ลูกค้า</th>
+                                    <th>พนักงาน</th>
+                                    <th>วันที่</th>
+                                    <th>บริษัทขนส่ง</th>
+                                    <th>สถานะ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dash-recent-orders-tbody">
+                                <!-- Populated dynamically by app.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SCREEN 03: PRODUCTS LIST (รายการสินค้าทั้งหมด)                    -->
+        <!-- ============================================================== -->
+        <div id="screen-products" class="screen-view">
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <div class="page-title">รายการสินค้าทั้งหมด</div>
+                        <div id="prod-total-count" class="page-desc">79 รายการ · อัปเดตล่าสุด</div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary btn-sm" onclick="App.exportReportCSV()">📥 นำออก CSV</button>
+                        <button class="btn btn-primary btn-sm" onclick="App.setupProductForm(); App.showScreen('product-form')">➕ เพิ่มสินค้าใหม่</button>
+                    </div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <input id="prod-search-input" class="filter-input" placeholder="🔍 ค้นหาชื่อสินค้า หรือ รหัส..." oninput="App.loadProducts()">
+                    <select id="prod-filter-cat" class="filter-select" onchange="App.loadProducts()">
+                        <option value="">ทุกหมวดหมู่</option>
+                    </select>
+                    <select id="prod-filter-sup" class="filter-select" onchange="App.loadProducts()">
+                        <option value="">ทุกผู้จัดจำหน่าย</option>
+                    </select>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('prod-search-input').value=''; document.getElementById('prod-filter-cat').value=''; document.getElementById('prod-filter-sup').value=''; App.loadProducts();">รีเซ็ต</button>
+                </div>
+
+                <!-- Table Card -->
+                <div class="bms-card p-0">
+                    <div class="table-wrap">
+                        <table class="bms-table">
+                            <thead>
+                                <tr>
+                                    <th>รหัส</th>
+                                    <th>ชื่อสินค้า</th>
+                                    <th>หมวดหมู่</th>
+                                    <th>ผู้จัดจำหน่าย</th>
+                                    <th>หน่วย</th>
+                                    <th>ราคา (บาท)</th>
+                                    <th>สถานะ</th>
+                                    <th>จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-table-tbody">
+                                <!-- Populated by App.loadProducts() -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="prod-pagination" class="d-flex justify-content-between align-items-center p-3 border-top">
+                        <!-- Pagination buttons -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SCREEN 04: PRODUCT FORM (เพิ่ม / แก้ไขสินค้า)                     -->
+        <!-- ============================================================== -->
+        <div id="screen-product-form" class="screen-view">
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <div id="product-form-title" class="page-title">เพิ่มสินค้าใหม่</div>
+                        <div id="product-form-desc" class="page-desc">กรอกข้อมูลสินค้าให้ครบถ้วน (ช่องที่มี * กำหนดต้องกรอก)</div>
+                    </div>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="App.showScreen('products')">← กลับไปหน้ารายการสินค้า</button>
+                </div>
+
+                <div class="bms-card">
+                    <form id="product-edit-form" onsubmit="event.preventDefault(); App.saveProduct();">
+                        <div class="form-grid-bms">
+                            <div class="form-group-bms full">
+                                <label class="form-label-bms required">ชื่อสินค้า (Product Name)</label>
+                                <input id="pform-name" class="form-control" placeholder="เช่น กาแฟอาราบิก้าคั่วเข้ม" required maxlength="30">
+                                <span class="form-hint-bms">ความยาวไม่เกิน 30 ตัวอักษร (ตามฐานข้อมูล tb_products)</span>
+                            </div>
+                            <div class="form-group-bms">
+                                <label class="form-label-bms required">หมวดหมู่สินค้า (Category)</label>
+                                <select id="pform-category" class="form-select" required>
+                                    <option value="">— เลือกหมวดหมู่ —</option>
+                                </select>
+                            </div>
+                            <div class="form-group-bms">
+                                <label class="form-label-bms required">ผู้จัดจำหน่าย (Supplier)</label>
+                                <select id="pform-supplier" class="form-select" required>
+                                    <option value="">— เลือกผู้จัดจำหน่าย —</option>
+                                </select>
+                            </div>
+                            <div class="form-group-bms">
+                                <label class="form-label-bms required">หน่วยบรรจุภัณฑ์ (Unit)</label>
+                                <input id="pform-unit" class="form-control" placeholder="เช่น 12 กล่อง × 500 มล." required maxlength="30">
+                            </div>
+                            <div class="form-group-bms">
+                                <label class="form-label-bms required">ราคาต่อหน่วย (บาท)</label>
+                                <input id="pform-price" class="form-control" type="number" step="0.01" min="0.01" placeholder="0.00" required>
+                                <span class="form-hint-bms text-warning">⚠️ ราคาสูงกว่า ฿10,000 จะถูกตั้งสถานะ "ตรวจสอบ" อัตโนมัติ</span>
+                            </div>
+                            <div class="form-group-bms">
+                                <label class="form-label-bms required">สถานะสินค้า</label>
+                                <select id="pform-status" class="form-select">
+                                    <option value="ใช้งานอยู่">ใช้งานอยู่</option>
+                                    <option value="ไม่ใช้งาน">ไม่ใช้งาน</option>
+                                    <option value="ตรวจสอบ">ตรวจสอบ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                            <button type="button" class="btn btn-outline-secondary" onclick="App.showScreen('products')">ยกเลิก</button>
+                            <button id="product-form-submit-btn" type="submit" class="btn btn-primary fw-bold">💾 บันทึกสินค้า</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SCREEN 05: CATEGORIES (หมวดหมู่สินค้า)                            -->
+        <!-- ============================================================== -->
+        <div id="screen-categories" class="screen-view">
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <div class="page-title">หมวดหมู่สินค้า (Categories)</div>
+                        <div id="cat-total-count" class="page-desc">9 หมวดหมู่</div>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="App.addCategoryPrompt()">➕ เพิ่มหมวดหมู่</button>
+                </div>
+                <div id="categories-grid" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                    <!-- Populated by App.loadCategories() -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SCREEN 06: ORDERS (คำสั่งซื้อ)                                   -->
+        <!-- ============================================================== -->
+        <div id="screen-orders" class="screen-view">
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <div class="page-title">รายการคำสั่งซื้อ</div>
+                        <div id="order-total-count" class="page-desc">196 รายการ · เลขที่ #10248 – #10443</div>
+                    </div>
+                </div>
+
+                <div class="filter-bar">
+                    <input id="order-search-input" class="filter-input" placeholder="🔍 ค้นหาเลขคำสั่งซื้อ / ลูกค้า..." oninput="App.loadOrders()">
+                    <select id="order-filter-status" class="filter-select" onchange="App.loadOrders()">
+                        <option value="">ทุกสถานะ</option>
+                        <option value="จัดส่งแล้ว">จัดส่งแล้ว</option>
+                        <option value="กำลังดำเนินการ">กำลังดำเนินการ</option>
+                        <option value="ยกเลิก">ยกเลิก</option>
+                    </select>
+                </div>
+
+                <div class="bms-card p-0">
+                    <div class="table-wrap">
+                        <table class="bms-table">
+                            <thead>
+                                <tr>
+                                    <th>เลขที่</th>
+                                    <th>ลูกค้า</th>
+                                    <th>พนักงาน</th>
+                                    <th>วันที่สั่ง</th>
+                                    <th>บริษัทขนส่ง</th>
+                                    <th>รายการ</th>
+                                    <th>สถานะ</th>
+                                    <th>จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-table-tbody">
+                                <!-- Populated by App.loadOrders() -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="order-pagination" class="d-flex justify-content-between align-items-center p-3 border-top"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SCREEN 07: ORDER DETAIL (รายละเอียดคำสั่งซื้อ)                    -->
+        <!-- ============================================================== -->
+        <div id="screen-order-detail" class="screen-view">
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <div class="page-title">รายละเอียดคำสั่งซื้อ <span id="ord-detail-title-id">#10443</span></div>
+                        <div class="page-desc">ข้อมูลสินค้า ข้อมูลลูกค้า และการจัดส่ง</div>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <span id="ord-detail-status-badge" class="badge-bms badge-green">✅ จัดส่งแล้ว</span>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="window.print()">🖨 พิมพ์ใบเสร็จ</button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="App.showScreen('orders')">← กลับ</button>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-lg-8">
+                        <div class="bms-card mb-3">
+                            <div class="bms-card-title">📋 รายการสินค้าในคำสั่งซื้อ</div>
+                            <div class="table-wrap">
+                                <table class="bms-table">
+                                    <thead>
+                                        <tr>
+                                            <th>สินค้า</th>
+                                            <th>จำนวน</th>
+                                            <th>ราคา/หน่วย</th>
+                                            <th>รวม</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ord-items-tbody">
+                                        <!-- Items list -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-3 pt-3 border-top">
+                                <div class="info-row"><span class="info-label">จำนวนรายการ</span><span id="ord-summary-items-count" class="info-val">2 รายการ</span></div>
+                                <div class="info-row"><span class="info-label">จำนวนหน่วยรวม</span><span id="ord-summary-units-count" class="info-val">20 หน่วย</span></div>
+                                <div class="info-row border-0 mt-2"><span class="info-label fs-5 fw-bold">ยอดรวมสุทธิ</span><span id="ord-summary-grand-total" class="info-val fs-4 text-primary">฿368.00</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="d-flex flex-column gap-3">
+                            <div class="bms-card">
+                                <div class="bms-card-title">👥 ข้อมูลลูกค้า</div>
+                                <div class="info-row"><span class="info-label">บริษัท</span><span id="ord-detail-customer" class="info-val">Ernst Handel</span></div>
+                                <div class="info-row"><span class="info-label">ผู้ติดต่อ</span><span id="ord-detail-contact" class="info-val">Roland Mendel</span></div>
+                                <div class="info-row"><span class="info-label">เมือง / ประเทศ</span><span id="ord-detail-city" class="info-val">Graz, ออสเตรีย</span></div>
+                                <div class="info-row border-0"><span class="info-label">รหัสไปรษณีย์</span><span id="ord-detail-postal" class="info-val">8010</span></div>
+                            </div>
+                            <div class="bms-card">
+                                <div class="bms-card-title">🚚 ข้อมูลการจัดส่ง</div>
+                                <div class="info-row"><span class="info-label">วันที่สั่ง</span><span id="ord-detail-date" class="info-val">2 ธ.ค. 2540</span></div>
+                                <div class="info-row"><span class="info-label">บริษัทขนส่ง</span><span id="ord-detail-shipper" class="info-val">Federal Shipping</span></div>
+                                <div class="info-row border-0"><span class="info-label">พนักงานดูแล</span><span id="ord-detail-employee" class="info-val">แอนน์ ด็อดส์เวิร์ท</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SCREEN 08: CUSTOMERS (ลูกค้า)                                    -->
+        <!-- ============================================================== -->
+        <div id="screen-customers" class="screen-view">
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <div class="page-title">ทะเบียนลูกค้า (Customers)</div>
+                        <div id="cust-total-count" class="page-desc">91 ราย · 21 ประเทศ</div>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="App.addCustomerPrompt()">➕ เพิ่มลูกค้าใหม่</button>
+                </div>
+
+                <div class="filter-bar">
+                    <input id="cust-search-input" class="filter-input" placeholder="🔍 ค้นหาบริษัท / ชื่อผู้ติดต่อ..." oninput="App.loadCustomers()">
+                    <select id="cust-filter-country" class="filter-select" onchange="App.loadCustomers()">
+                        <option value="">ทุกประเทศ</option>
+                        <option value="Germany">เยอรมนี</option>
+                        <option value="Mexico">เม็กซิโก</option>
+                        <option value="UK">สหราชอาณาจักร</option>
+                        <option value="France">ฝรั่งเศส</option>
+                        <option value="USA">สหรัฐอเมริกา</option>
+                    </select>
+                </div>
+
+                <div class="bms-card p-0">
+                    <div class="table-wrap">
+                        <table class="bms-table">
+                            <thead>
+                                <tr>
+                                    <th>รหัส</th>
+                                    <th>บริษัท</th>
+                                    <th>ผู้ติดต่อ</th>
+                                    <th>เมือง</th>
+                                    <th>ประเทศ</th>
+                                    <th>รหัสไปรษณีย์</th>
+                                    <th>จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customers-table-tbody">
+                                <!-- Populated by App.loadCustomers() -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="cust-pagination" class="d-flex justify-content-between align-items-center p-3 border-top"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SCREEN 09: SUPPLIERS (ผู้จัดจำหน่าย)                              -->
+        <!-- ============================================================== -->
+        <div id="screen-suppliers" class="screen-view">
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <div class="page-title">ทะเบียนผู้จัดจำหน่าย (Suppliers)</div>
+                        <div id="sup-total-count" class="page-desc">29 ราย</div>
+                    </div>
+                </div>
+
+                <div class="filter-bar">
+                    <input id="sup-search-input" class="filter-input" placeholder="🔍 ค้นหาชื่อบริษัท / ผู้ติดต่อ..." oninput="App.loadSuppliers()">
+                </div>
+
+                <div class="bms-card p-0">
+                    <div class="table-wrap">
+                        <table class="bms-table">
+                            <thead>
+                                <tr>
+                                    <th>รหัส</th>
+                                    <th>บริษัท</th>
+                                    <th>ผู้ติดต่อ</th>
+                                    <th>เมือง</th>
+                                    <th>ประเทศ</th>
+                                    <th>เบอร์โทร</th>
+                                    <th>สินค้า</th>
+                                    <th>จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="suppliers-table-tbody">
+                                <!-- Populated by App.loadSuppliers() -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SCREEN 10: EMPLOYEES (พนักงาน)                                   -->
+        <!-- ============================================================== -->
+        <div id="screen-employees" class="screen-view">
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <div class="page-title">รายชื่อพนักงาน (Employees)</div>
+                        <div id="emp-total-count" class="page-desc">10 คน</div>
+                    </div>
+                </div>
+                <div id="employees-grid" class="emp-grid">
+                    <!-- Populated by App.loadEmployees() -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SCREEN 11: SHIPPERS (บริษัทขนส่ง)                                 -->
+        <!-- ============================================================== -->
+        <div id="screen-shippers" class="screen-view">
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <div class="page-title">บริษัทขนส่ง (Shippers)</div>
+                        <div id="shipper-total-count" class="page-desc">3 บริษัท</div>
+                    </div>
+                </div>
+                <div id="shippers-grid" class="row row-cols-1 row-cols-md-3 g-3">
+                    <!-- Populated by App.loadShippers() -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SCREEN 12: REPORTS (รายงานและวิเคราะห์ข้อมูล)                     -->
+        <!-- ============================================================== -->
+        <div id="screen-reports" class="screen-view">
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <div class="page-title">รายงานและวิเคราะห์ข้อมูล (Reports & Analytics)</div>
+                        <div class="page-desc">สรุปยอดขาย การจำหน่ายสินค้า และลูกค้าชั้นนำ</div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <select id="report-filter-year" class="filter-select" onchange="App.loadReports()">
+                            <option value="2540">ปี 2540</option>
+                            <option value="2539">ปี 2539</option>
+                            <option value="all">ทุกปี</option>
+                        </select>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="App.exportReportCSV()">📥 ส่งออก Excel/CSV</button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="App.exportReportPDF()">📄 ส่งออก PDF/พิมพ์</button>
+                    </div>
+                </div>
+
+                <div class="tab-list-bms">
+                    <button class="tab-item-bms active">📊 ภาพรวมการขาย</button>
+                    <button class="tab-item-bms" onclick="Swal.fire('รายงานตามสินค้า', 'กำลังประมวลผลข้อมูลตามสินค้า', 'info')">📦 ตามสินค้า</button>
+                    <button class="tab-item-bms" onclick="Swal.fire('รายงานตามลูกค้า', 'กำลังประมวลผลข้อมูลตามลูกค้า', 'info')">👥 ตามลูกค้า</button>
+                    <button class="tab-item-bms" onclick="Swal.fire('รายงานตามพนักงาน', 'กำลังประมวลผลข้อมูลตามพนักงาน', 'info')">👤 ตามพนักงาน</button>
+                </div>
+
+                <!-- Report KPIs -->
+                <div class="kpi-grid mb-3">
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-label">รายได้รวม (ประมาณ)</div>
+                            <div id="rep-kpi-revenue" class="kpi-value fs-4 text-success">฿2.45M</div>
+                            <div class="kpi-trend up">▲ 8.4% จากปีก่อน</div>
+                        </div>
+                        <div class="kpi-icon" style="background:#DCFCE7">💰</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-label">คำสั่งซื้อทั้งหมด</div>
+                            <div id="rep-kpi-orders" class="kpi-value fs-4">196</div>
+                            <div class="kpi-trend up">▲ 12% เติบโตต่อเนื่อง</div>
+                        </div>
+                        <div class="kpi-icon" style="background:#DBEAFE">📋</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-label">ค่าเฉลี่ยต่อออร์เดอร์</div>
+                            <div id="rep-kpi-avg" class="kpi-value fs-4">฿1,250</div>
+                            <div class="kpi-trend text-muted">— ปกติ</div>
+                        </div>
+                        <div class="kpi-icon" style="background:#FEF3C7">📉</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-label">บริษัทขนส่งยอดนิยม</div>
+                            <div id="rep-kpi-shipper" class="kpi-value fs-6 mt-1">United Package</div>
+                            <div id="rep-kpi-shipper-trips" class="kpi-trend text-muted">74 ครั้ง</div>
+                        </div>
+                        <div class="kpi-icon" style="background:#F3E8FF">🚚</div>
+                    </div>
+                </div>
+
+                <!-- Charts and Top Products Row -->
+                <div class="row g-3 mb-4">
+                    <div class="col-lg-6">
+                        <div class="bms-card h-100">
+                            <div class="bms-card-title">📈 แนวโน้มยอดขายรายเดือน</div>
+                            <div class="bar-chart" style="height:110px">
+                                <div class="bar-wrap"><div class="bar-col" style="height:30px;background:#93C5FD"></div><div class="bar-lbl">เม.ย</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:45px;background:#93C5FD"></div><div class="bar-lbl">พ.ค</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:55px;background:#93C5FD"></div><div class="bar-lbl">มิ.ย</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:70px;background:#93C5FD"></div><div class="bar-lbl">ก.ค</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:65px;background:#93C5FD"></div><div class="bar-lbl">ส.ค</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:80px;background:#93C5FD"></div><div class="bar-lbl">ก.ย</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:90px;background:#93C5FD"></div><div class="bar-lbl">ต.ค</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:100px;background:#1D4ED8"></div><div class="bar-lbl">พ.ย</div></div>
+                                <div class="bar-wrap"><div class="bar-col" style="height:85px;background:#93C5FD"></div><div class="bar-lbl">ธ.ค</div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="bms-card h-100">
+                            <div class="bms-card-title">🏆 สินค้าขายดีสูงสุด (Top 5)</div>
+                            <div id="rep-top-products-wrap">
+                                <!-- Populated dynamically by App.loadReports() -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top 5 Customers -->
+                <div class="bms-card p-0">
+                    <div class="p-3 border-bottom fw-bold">🥇 ลูกค้าที่ซื้อสูงสุด (Top 5)</div>
+                    <div class="table-wrap">
+                        <table class="bms-table">
+                            <thead>
+                                <tr>
+                                    <th>อันดับ</th>
+                                    <th>บริษัท</th>
+                                    <th>ประเทศ</th>
+                                    <th style="text-align:center">จำนวนออร์เดอร์</th>
+                                    <th>สัดส่วน</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rep-top-customers-tbody">
+                                <!-- Populated dynamically by App.loadReports() -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- Bootstrap 5 JS Bundle & SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Application Scripts -->
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
+

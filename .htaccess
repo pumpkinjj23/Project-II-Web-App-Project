@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Route /api/* to api/index.php
+    RewriteRule ^api/(.*)$ api/index.php [QSA,L]
+
+    # Allow direct access to existing files and directories
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Default to index.html for single-page app
+    RewriteRule ^ index.html [L]
+</IfModule>
+

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northwind BMS — API Documentation (RESTful API)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; background: #0f172a; color: #f8fafc; padding: 30px 15px; }
+        .endpoint-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; margin-bottom: 20px; overflow: hidden; }
+        .method-badge { font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 13px; padding: 4px 10px; border-radius: 6px; }
+        .method-get { background: #10b981; color: #fff; }
+        .method-post { background: #3b82f6; color: #fff; }
+        .method-put { background: #f59e0b; color: #fff; }
+        .method-delete { background: #ef4444; color: #fff; }
+        pre.code-block { background: #0b1120; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: #38bdf8; overflow-x: auto; margin-bottom: 0; }
+        .table-dark-custom th { background: #0f172a; border-color: #334155; color: #94a3b8; font-size: 12px; text-transform: uppercase; }
+        .table-dark-custom td { border-color: #334155; font-size: 13px; }
+        .sidebar-doc { position: sticky; top: 20px; background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 16px; }
+        .sidebar-doc a { color: #94a3b8; text-decoration: none; display: block; padding: 6px 10px; border-radius: 6px; font-size: 13px; }
+        .sidebar-doc a:hover { background: #334155; color: #f8fafc; }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid" style="max-width: 1400px;">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+        <div class="d-flex align-items-center gap-3">
+            <div style="width:48px;height:48px;background:#2563eb;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;">NW</div>
+            <div>
+                <h2 class="fw-bold mb-0 text-white">Northwind BMS — API Documentation</h2>
+                <div class="text-secondary small">ข้อกำหนดที่ 4 จาก 4: รายละเอียด RESTful API Endpoints ทุกตาราง</div>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="index.html" class="btn btn-primary fw-bold">🚀 เปิด Web Application</a>
+            <a href="docs/northwind_postman_collection.json" download class="btn btn-outline-warning">📦 ดาวน์โหลด Postman Collection</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Sidebar Navigation -->
+        <div class="col-lg-3 d-none d-lg-block">
+            <div class="sidebar-doc">
+                <div class="text-uppercase fw-bold text-secondary small mb-2 px-2">หมวดหมู่อ้างอิง API</div>
+                <a href="#auth-api">🔐 1. Authentication (JWT)</a>
+                <a href="#dash-api">📊 2. Dashboard & Stats</a>
+                <a href="#products-api">📦 3. Products (tb_products)</a>
+                <a href="#categories-api">🗂 4. Categories (tb_categories)</a>
+                <a href="#orders-api">🛒 5. Orders (tb_orders)</a>
+                <a href="#customers-api">👥 6. Customers (tb_customers)</a>
+                <a href="#suppliers-api">🏭 7. Suppliers (tb_suppliers)</a>
+                <a href="#employees-api">👤 8. Employees (tb_employees)</a>
+                <a href="#shippers-api">🚚 9. Shippers (tb_shippers)</a>
+                <a href="#reports-api">📈 10. Reports & Analytics</a>
+                <a href="#health-api">⚙️ 11. Health & Diagnostics</a>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="col-lg-9">
+
+            <!-- 1. AUTH API -->
+            <section id="auth-api" class="mb-5">
+                <h4 class="fw-bold text-primary mb-3">🔐 1. Authentication API (JWT)</h4>
+
+                <!-- Login -->
+                <div class="endpoint-card">
+                    <div class="p-3 border-bottom border-secondary d-flex align-items-center gap-3">
+                        <span class="method-badge method-post">POST</span>
+                        <span class="font-monospace fw-bold fs-6">/api/v1/auth/login</span>
+                        <span class="text-secondary small">— เข้าสู่ระบบและขอรับ JWT Token</span>
+                    </div>
+                    <div class="p-3">
+                        <h6 class="fw-bold text-info">Request Body (JSON):</h6>
+                        <pre class="code-block">{
+  "email": "admin@northwind.co.th",
+  "password": "••••••••"
+}</pre>
+                        <h6 class="fw-bold text-info mt-3">Response 200 (Success):</h6>
+                        <pre class="code-block">{
+  "status": true,
+  "success": true,
+  "code": 200,
+  "message": "เข้าสู่ระบบสำเร็จ ยินดีต้อนรับ วชิรา ล.",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "token_type": "Bearer",
+    "expires_in": 86400,
+    "user": {
+      "id": 1,
+      "name": "วชิรา ล.",
+      "email": "admin@northwind.co.th",
+      "role": "ผู้ดูแลระบบ (Administrator)"
+    }
+  }
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. PRODUCTS API -->
+            <section id="products-api" class="mb-5">
+                <h4 class="fw-bold text-primary mb-3">📦 2. Products API (tb_products CRUD)</h4>
+
+                <!-- GET /products -->
+                <div class="endpoint-card">
+                    <div class="p-3 border-bottom border-secondary d-flex align-items-center gap-3">
+                        <span class="method-badge method-get">GET</span>
+                        <span class="font-monospace fw-bold fs-6">/api/v1/products</span>
+                        <span class="text-secondary small">— ค้นหาและดึงรายการสินค้า</span>
+                    </div>
+                    <div class="p-3">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <h6 class="fw-bold text-info">Headers:</h6>
+                                <pre class="code-block">Authorization: Bearer {token}
+Accept: application/json</pre>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="fw-bold text-info">Query Parameters:</h6>
+                                <pre class="code-block">?search=ชาไทย
+&category_id=1
+&supplier_id=1
+&min_price=10
+&max_price=50
+&page=1
+&limit=25</pre>
+                            </div>
+                        </div>
+
+                        <h6 class="fw-bold text-info mt-3">Response 200 (Success):</h6>
+                        <pre class="code-block">{
+  "status": true,
+  "total": 79,
+  "page": 1,
+  "limit": 25,
+  "totalPages": 4,
+  "data": [
+    {
+      "i_ProductID": 1,
+      "c_ProductName": "ชาไทย",
+      "i_SupplierID": 1,
+      "i_CategoryID": 1,
+      "c_Unit": "10 กล่อง × 20 ถุง",
+      "i_Price": 18.00,
+      "c_CategoryName": "เครื่องดื่ม",
+      "c_SupplierName": "Exotic Liquids",
+      "status": "ใช้งานอยู่",
+      "badge_class": "badge-green"
+    }
+  ]
+}</pre>
+                    </div>
+                </div>
+
+                <!-- POST /products -->
+                <div class="endpoint-card">
+                    <div class="p-3 border-bottom border-secondary d-flex align-items-center gap-3">
+                        <span class="method-badge method-post">POST</span>
+                        <span class="font-monospace fw-bold fs-6">/api/v1/products</span>
+                        <span class="text-secondary small">— เพิ่มสินค้าใหม่เข้าสู่ระบบ</span>
+                    </div>
+                    <div class="p-3">
+                        <h6 class="fw-bold text-info">Request Body (JSON):</h6>
+                        <pre class="code-block">{
+  "c_ProductName": "กาแฟอาราบิก้าคั่วเข้ม",
+  "i_CategoryID": 1,
+  "i_SupplierID": 2,
+  "c_Unit": "12 ถุง × 250 กรัม",
+  "i_Price": 185.00
+}</pre>
+                        <h6 class="fw-bold text-info mt-3">Response 201 (Created):</h6>
+                        <pre class="code-block">{
+  "status": true,
+  "code": 201,
+  "message": "บันทึกสินค้าใหม่สำเร็จ รหัส #104",
+  "data": {
+    "i_ProductID": 104,
+    "c_ProductName": "กาแฟอาราบิก้าคั่วเข้ม",
+    "i_Price": 185.00
+  }
+}</pre>
+                    </div>
+                </div>
+
+                <!-- PUT /products/{id} -->
+                <div class="endpoint-card">
+                    <div class="p-3 border-bottom border-secondary d-flex align-items-center gap-3">
+                        <span class="method-badge method-put">PUT</span>
+                        <span class="font-monospace fw-bold fs-6">/api/v1/products/{id}</span>
+                        <span class="text-secondary small">— แก้ไขข้อมูลสินค้า</span>
+                    </div>
+                    <div class="p-3">
+                        <h6 class="fw-bold text-info">Request Body (JSON):</h6>
+                        <pre class="code-block">{
+  "c_ProductName": "ชาเขียวมัทฉะแท้",
+  "i_CategoryID": 1,
+  "i_SupplierID": 1,
+  "c_Unit": "20 ซอง",
+  "i_Price": 150.00
+}</pre>
+                        <h6 class="fw-bold text-info mt-3">Response 200 (Success):</h6>
+                        <pre class="code-block">{
+  "status": true,
+  "code": 200,
+  "message": "อัปเดตข้อมูลสินค้ารหัส #1 เรียบร้อยแล้ว",
+  "data": { "i_ProductID": 1 }
+}</pre>
+                    </div>
+                </div>
+
+                <!-- DELETE /products/{id} -->
+                <div class="endpoint-card">
+                    <div class="p-3 border-bottom border-secondary d-flex align-items-center gap-3">
+                        <span class="method-badge method-delete">DELETE</span>
+                        <span class="font-monospace fw-bold fs-6">/api/v1/products/{id}</span>
+                        <span class="text-secondary small">— ลบข้อมูลสินค้า</span>
+                    </div>
+                    <div class="p-3">
+                        <h6 class="fw-bold text-info">Response 200 (Success):</h6>
+                        <pre class="code-block">{
+  "status": true,
+  "code": 200,
+  "message": "ลบสินค้ารหัส #1 สำเร็จ"
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. ORDERS API -->
+            <section id="orders-api" class="mb-5">
+                <h4 class="fw-bold text-primary mb-3">🛒 3. Orders & Details API (tb_orders, tb_orderdetails)</h4>
+
+                <div class="endpoint-card">
+                    <div class="p-3 border-bottom border-secondary d-flex align-items-center gap-3">
+                        <span class="method-badge method-get">GET</span>
+                        <span class="font-monospace fw-bold fs-6">/api/v1/orders/{id}</span>
+                        <span class="text-secondary small">— ดูรายละเอียดคำสั่งซื้อและรายการสินค้า (Order Detail)</span>
+                    </div>
+                    <div class="p-3">
+                        <h6 class="fw-bold text-info">Response 200 (Success):</h6>
+                        <pre class="code-block">{
+  "status": true,
+  "data": {
+    "i_OrderID": 10443,
+    "c_OrderDate": "1997-12-02",
+    "c_customername": "Ernst Handel",
+    "c_contactname": "Roland Mendel",
+    "c_city": "Graz",
+    "c_country": "Austria",
+    "employee_name": "Anne Dodsworth",
+    "c_ShipperName": "Federal Shipping",
+    "status": "จัดส่งแล้ว",
+    "items_count": 2,
+    "total_units": 20,
+    "grand_total": 368.00,
+    "items": [
+      {
+        "i_OrderDetailID": 1,
+        "i_ProductID": 1,
+        "c_ProductName": "ชาไทย (Chai)",
+        "i_Quantity": 12,
+        "i_Price": 18.00,
+        "line_total": 216.00
+      },
+      {
+        "i_OrderDetailID": 2,
+        "i_ProductID": 2,
+        "c_ProductName": "น้ำซุปชาม (Chang)",
+        "i_Quantity": 8,
+        "i_Price": 19.00,
+        "line_total": 152.00
+      }
+    ]
+  }
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. OTHER CRUD ENDPOINTS SUMMARY -->
+            <section class="mb-5">
+                <h4 class="fw-bold text-primary mb-3">📋 4. สรุป RESTful API Endpoints ทั้งหมด</h4>
+                <div class="endpoint-card p-0">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover mb-0 table-dark-custom">
+                            <thead>
+                                <tr>
+                                    <th>Resource / Entity</th>
+                                    <th>Method</th>
+                                    <th>Endpoint URL</th>
+                                    <th>คำอธิบาย</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Authentication</td><td><span class="method-badge method-post">POST</span></td><td>/api/v1/auth/login</td><td>เข้าสู่ระบบและรับ JWT Token</td></tr>
+                                <tr><td>Authentication</td><td><span class="method-badge method-get">GET</span></td><td>/api/v1/auth/me</td><td>ตรวจสอบ Token ผู้ใช้ปัจจุบัน</td></tr>
+                                <tr><td>Dashboard</td><td><span class="method-badge method-get">GET</span></td><td>/api/v1/dashboard/stats</td><td>ดึงสถิติภาพรวม 4 KPI และคำสั่งซื้อล่าสุด</td></tr>
+                                <tr><td>Products</td><td><span class="method-badge method-get">GET</span></td><td>/api/v1/products</td><td>ค้นหาและกรองรายการสินค้า</td></tr>
+                                <tr><td>Products</td><td><span class="method-badge method-post">POST</span></td><td>/api/v1/products</td><td>เพิ่มสินค้าใหม่ (Prepared SQL)</td></tr>
+                                <tr><td>Products</td><td><span class="method-badge method-put">PUT</span></td><td>/api/v1/products/{id}</td><td>แก้ไขสินค้า</td></tr>
+                                <tr><td>Products</td><td><span class="method-badge method-delete">DELETE</span></td><td>/api/v1/products/{id}</td><td>ลบสินค้า</td></tr>
+                                <tr><td>Categories</td><td><span class="method-badge method-get">GET</span></td><td>/api/v1/categories</td><td>ดึง 9 หมวดหมู่พร้อมจำนวนสินค้า</td></tr>
+                                <tr><td>Categories</td><td><span class="method-badge method-post">POST</span></td><td>/api/v1/categories</td><td>สร้างหมวดหมู่ใหม่</td></tr>
+                                <tr><td>Orders</td><td><span class="method-badge method-get">GET</span></td><td>/api/v1/orders</td><td>ดึงรายการคำสั่งซื้อและกรองสถานะ</td></tr>
+                                <tr><td>Orders</td><td><span class="method-badge method-get">GET</span></td><td>/api/v1/orders/{id}</td><td>รายละเอียดคำสั่งซื้อ + Line Items</td></tr>
+                                <tr><td>Customers</td><td><span class="method-badge method-get">GET</span></td><td>/api/v1/customers</td><td>ทะเบียนลูกค้า 91 รายการ</td></tr>
+                                <tr><td>Suppliers</td><td><span class="method-badge method-get">GET</span></td><td>/api/v1/suppliers</td><td>ทะเบียนผู้จัดจำหน่าย 29 ราย</td></tr>
+                                <tr><td>Employees</td><td><span class="method-badge method-get">GET</span></td><td>/api/v1/employees</td><td>รายชื่อพนักงาน 10 คน</td></tr>
+                                <tr><td>Shippers</td><td><span class="method-badge method-get">GET</span></td><td>/api/v1/shippers</td><td>บริษัทขนส่ง 3 บริษัท</td></tr>
+                                <tr><td>Reports</td><td><span class="method-badge method-get">GET</span></td><td>/api/v1/reports/summary</td><td>สรุปรายงานยอดขายและลูกค้าชั้นนำ</td></tr>
+                                <tr><td>Reports</td><td><span class="method-badge method-get">GET</span></td><td>/api/v1/reports/export</td><td>ดาวน์โหลดรายงานในรูปแบบ CSV</td></tr>
+                                <tr><td>Health</td><td><span class="method-badge method-get">GET</span></td><td>/api/v1/health</td><td>ตรวจสอบสถานะการเชื่อมต่อ MySQL</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+

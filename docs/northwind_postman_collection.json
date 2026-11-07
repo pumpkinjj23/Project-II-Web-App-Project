@@ -1,0 +1,335 @@
+{
+  "info": {
+    "name": "Northwind BMS RESTful API Collection (CPE66)",
+    "description": "Postman Collection สำหรับทดสอบ RESTful API ครบทุก 8 ตาราง พร้อม JWT Auth ตามข้อกำหนดที่ 4 ในสไลด์",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "POST Login (Get JWT Token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@northwind.co.th\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "GET Me (Verify Token)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Dashboard & Stats",
+      "item": [
+        {
+          "name": "GET Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "stats"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Products (tb_products)",
+      "item": [
+        {
+          "name": "GET All Products (with Search & Filter)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products?search=&category_id=&page=1&limit=25",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "search", "value": "" },
+                { "key": "category_id", "value": "" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "25" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Single Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "1"]
+            }
+          }
+        },
+        {
+          "name": "POST Create New Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"c_ProductName\": \"กาแฟอาราบิก้าคั่วเข้ม\",\n  \"i_CategoryID\": 1,\n  \"i_SupplierID\": 2,\n  \"c_Unit\": \"12 ถุง x 250 กรัม\",\n  \"i_Price\": 180.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"]
+            }
+          }
+        },
+        {
+          "name": "PUT Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"c_ProductName\": \"ชาเขียวมัทฉะแท้\",\n  \"i_CategoryID\": 1,\n  \"i_SupplierID\": 1,\n  \"c_Unit\": \"20 ซอง\",\n  \"i_Price\": 150.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "1"]
+            }
+          }
+        },
+        {
+          "name": "DELETE Product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/104",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "104"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Categories (tb_categories)",
+      "item": [
+        {
+          "name": "GET All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories"]
+            }
+          }
+        },
+        {
+          "name": "POST Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"c_CategoryName\": \"อาหารแช่แข็ง\",\n  \"c_Description\": \"Frozen ready-to-eat meals\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Orders & Details (tb_orders, tb_orderdetails)",
+      "item": [
+        {
+          "name": "GET Orders List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders?status=&page=1&limit=25",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"]
+            }
+          }
+        },
+        {
+          "name": "GET Order Detail by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/10443",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "10443"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Customers (tb_customers)",
+      "item": [
+        {
+          "name": "GET All Customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers?country=&page=1&limit=25",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Suppliers (tb_suppliers)",
+      "item": [
+        {
+          "name": "GET All Suppliers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/suppliers",
+              "host": ["{{baseUrl}}"],
+              "path": ["suppliers"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Employees (tb_employees)",
+      "item": [
+        {
+          "name": "GET All Employees",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/employees",
+              "host": ["{{baseUrl}}"],
+              "path": ["employees"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Shippers (tb_shippers)",
+      "item": [
+        {
+          "name": "GET All Shippers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shippers",
+              "host": ["{{baseUrl}}"],
+              "path": ["shippers"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Reports & Analytics",
+      "item": [
+        {
+          "name": "GET Reports Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reports/summary?year=all",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "summary"]
+            }
+          }
+        },
+        {
+          "name": "GET Reports Export CSV",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reports/export",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "export"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Health & Diagnostics",
+      "item": [
+        {
+          "name": "GET System Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost/CPE66/Project-II  Web App Project Full/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}
+
