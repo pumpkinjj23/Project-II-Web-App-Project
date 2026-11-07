@@ -66,6 +66,13 @@ class Router {
 
         $path = trim($path, '/');
 
+        // ตัด prefix index.php/ ถ้ามี
+        if (strpos($path, 'index.php/') === 0) {
+            $path = substr($path, 10);
+        } elseif ($path === 'index.php') {
+            $path = '';
+        }
+
         // ตัด prefix 'v1/' หรือ 'api/v1/' ออกถ้ามี
         if (strpos($path, 'api/v1/') === 0) {
             $path = substr($path, 7);
@@ -73,6 +80,12 @@ class Router {
             $path = substr($path, 4);
         } elseif (strpos($path, 'v1/') === 0) {
             $path = substr($path, 3);
+        }
+
+        if (strpos($path, 'index.php/') === 0) {
+            $path = substr($path, 10);
+        } elseif ($path === 'index.php') {
+            $path = '';
         }
 
         // Fallback: หากมีการส่งผ่าน ?route=... หรือ ?endpoint=...

@@ -79,10 +79,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'import') {
         <div class="row g-3 mb-4">
             <div class="col-md-6">
                 <div class="p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary">
-                    <div class="text-secondary small">สถานะการเชื่อมต่อ MySQL</div>
+                    <div class="text-secondary small">สถานะการเชื่อมต่อฐานข้อมูล (PDO OOP)</div>
                     <div class="fs-5 fw-bold mt-1">
                         <?php if ($conn): ?>
-                            <span class="text-success">✅ เชื่อมต่อสำเร็จ</span>
+                            <span class="text-success">✅ เชื่อมต่อสำเร็จ (<?= htmlspecialchars($config['engine'] ?? 'PDO') ?>)</span>
                         <?php else: ?>
                             <span class="text-danger">❌ ยังไม่ได้เชื่อมต่อ</span>
                         <?php endif; ?>
@@ -93,7 +93,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'import') {
                 <div class="p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary">
                     <div class="text-secondary small">โฮสต์ / ฐานข้อมูล</div>
                     <div class="fs-6 fw-bold mt-1 text-info">
-                        <?= $config ? htmlspecialchars($config['host'] . ':' . $config['port'] . ' (' . $config['db'] . ')') : 'N/A' ?>
+                        <?= $config ? htmlspecialchars(($config['label'] ?? ($config['host'] . ':' . $config['port'])) . ' (' . ($config['db'] ?? '') . ')') : 'N/A' ?>
                     </div>
                 </div>
             </div>
@@ -115,7 +115,11 @@ if (isset($_POST['action']) && $_POST['action'] === 'import') {
 
             $existingTables = [];
             try {
-                $existingTables = $conn->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
+                if (isset($config['type']) && $config['type'] === 'sqlite') {
+                    $existingTables = $conn->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
+                } else {
+                    $existingTables = $conn->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
+                }
             } catch (Exception $e) {}
 
             echo "<div class='table-responsive'><table class='table table-dark table-bordered align-middle'>";
