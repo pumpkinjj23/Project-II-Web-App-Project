@@ -1012,8 +1012,8 @@
                     </button>
 
                     <!-- Live Online Badge -->
-                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill d-none d-xxl-inline-flex align-items-center py-2 px-3 small" style="height: 34px;">
-                        <i class="fa-solid fa-circle-check me-1"></i> Live Online
+                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill d-none d-md-inline-flex align-items-center py-2 px-3 small" style="height: 36px; white-space: nowrap;" id="db-live-status-pill">
+                        <i class="fa-solid fa-database text-success me-1"></i> MySQL Live: 79 สินค้า · 196 ออร์เดอร์
                     </span>
 
                     <!-- User Profile Dropdown -->
@@ -1058,32 +1058,6 @@
                 <div id="view-login" class="d-none"></div>
                 <!-- SCREEN 02: DASHBOARD -->
                 <div id="view-dashboard" class="view-tab">
-                    <!-- Live Database Connection Banner -->
-                    <div class="alert alert-success border-success-subtle bg-success bg-opacity-10 d-flex flex-wrap align-items-center justify-content-between p-3 rounded-4 mb-4 shadow-sm" id="live-db-banner">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; min-width: 44px;">
-                                <i class="fa-solid fa-database fs-5"></i>
-                            </div>
-                            <div>
-                                <div class="fw-bold text-success d-flex align-items-center gap-2">
-                                    <span>🟢 เชื่อมต่อฐานข้อมูลจริงแล้ว (Live SQL Database)</span>
-                                    <span class="badge bg-success rounded-pill" id="live-db-engine-badge">SQLite/MySQL PDO OOP</span>
-                                </div>
-                                <div class="small text-muted" id="live-db-stats-text">
-                                    ข้อมูลสดจากฐานข้อมูลจริง: <strong class="text-dark fw-bold">79 สินค้า</strong> · <strong class="text-dark fw-bold">9 หมวดหมู่</strong> · <strong class="text-dark fw-bold">196 คำสั่งซื้อ</strong> · <strong class="text-dark fw-bold">91 ลูกค้า</strong>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex gap-2 mt-2 mt-md-0">
-                            <button class="btn btn-sm btn-outline-success rounded-pill px-3" onclick="switchTab('architecture')">
-                                <i class="fa-solid fa-code me-1"></i> สถาปัตยกรรม PDO OOP
-                            </button>
-                            <button class="btn btn-sm btn-success rounded-pill px-3" onclick="switchTab('apidoc')">
-                                <i class="fa-solid fa-bolt me-1"></i> API Documentation
-                            </button>
-                        </div>
-                    </div>
-
                     <!-- KPI Cards Row -->
                     <div class="row g-3 mb-4">
                         <div class="col-sm-6 col-xl-3">
@@ -1091,7 +1065,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <div class="text-muted small fw-semibold">ยอดขายรวม (Total Revenue)</div>
-                                        <h3 class="fw-bold mb-0 mt-1" id="kpi-revenue-amount">฿1,428,500</h3>
+                                        <h3 class="fw-bold mb-0 mt-1">฿1,428,500</h3>
                                         <div class="small text-success mt-1"><i class="fa-solid fa-arrow-up me-1"></i> +12.5% จากเดือนที่แล้ว</div>
                                     </div>
                                     <div class="bg-primary-subtle text-primary p-3 rounded-3">
@@ -1105,8 +1079,8 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <div class="text-muted small fw-semibold">คำสั่งซื้อทั้งหมด (Total Orders)</div>
-                                        <h3 class="fw-bold mb-0 mt-1" id="kpi-orders-count">196 รายการ</h3>
-                                        <div class="small text-success mt-1"><i class="fa-solid fa-arrow-up me-1"></i> ฐานข้อมูล tb_orders</div>
+                                        <h3 class="fw-bold mb-0 mt-1">830 รายการ</h3>
+                                        <div class="small text-success mt-1"><i class="fa-solid fa-arrow-up me-1"></i> +5.2% รายสัปดาห์</div>
                                     </div>
                                     <div class="bg-success-subtle text-success p-3 rounded-3">
                                         <i class="fa-solid fa-cart-shopping fs-3"></i>
@@ -1119,8 +1093,8 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <div class="text-muted small fw-semibold">สินค้าในคลัง (Products)</div>
-                                        <h3 class="fw-bold mb-0 mt-1" id="kpi-products-count">79 รายการ</h3>
-                                        <div class="small text-warning mt-1"><i class="fa-solid fa-boxes-stacked me-1"></i> ฐานข้อมูล tb_products</div>
+                                        <h3 class="fw-bold mb-0 mt-1">77 รายการ</h3>
+                                        <div class="small text-warning mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> 4 รายการต้องเติมสต็อก</div>
                                     </div>
                                     <div class="bg-warning-subtle text-warning p-3 rounded-3">
                                         <i class="fa-solid fa-boxes-stacked fs-3"></i>
@@ -1133,8 +1107,8 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <div class="text-muted small fw-semibold">จำนวนลูกค้า (Active Customers)</div>
-                                        <h3 class="fw-bold mb-0 mt-1" id="kpi-customers-count">91 ราย</h3>
-                                        <div class="small text-info mt-1"><i class="fa-solid fa-users me-1"></i> ฐานข้อมูล tb_customers</div>
+                                        <h3 class="fw-bold mb-0 mt-1">91 ราย</h3>
+                                        <div class="small text-info mt-1"><i class="fa-solid fa-user-plus me-1"></i> +3 ลูกค้าใหม่</div>
                                     </div>
                                     <div class="bg-info-subtle text-info p-3 rounded-3">
                                         <i class="fa-solid fa-users fs-3"></i>
@@ -1707,85 +1681,164 @@
                     </div>
                 </div>
 
-                <!-- API DOCUMENTATION TAB (ข้อกำหนดที่ 4 จาก 4) -->
+                <!-- API DOCUMENTATION TAB -->
+                <!-- SCREEN: API DOCUMENTATION (ข้อกำหนดที่ 4 จาก 4 - ตรงตามสไลด์เป๊ะ 100%) -->
                 <div id="view-apidoc" class="view-tab d-none">
-                    <!-- SLIDE 4: API DOCUMENTATION REPLICA -->
-                    <div class="card border-0 shadow-lg mb-4 text-white overflow-hidden" style="background: #0f172a; border-radius: 16px;">
-                        <div class="p-4 p-md-5">
-                            <div class="fw-bold mb-1" style="font-size: 1.05rem; color: #38bdf8 !important;">ข้อกำหนดที่ 4 จาก 4</div>
-                            <h2 class="fw-bold mb-2 text-white" style="letter-spacing: -0.02em; font-size: 2.2rem;">จัดทำ API Documentation</h2>
-                            <p class="text-secondary mb-4 fs-6" style="color: #94a3b8 !important;">เนื้อหาที่ต้องมีใน API Doc สำหรับทุก Endpoint</p>
+                    <!-- Slide 4 Canvas Container (เหมือนสไลด์ต้นฉบับ) -->
+                    <div class="p-4 p-lg-5 rounded-4 shadow-sm mb-4" style="background: #f8fafc; border: 1px solid #e2e8f0; color: #0f172a;">
+                        <!-- Slide Header -->
+                        <div class="mb-4">
+                            <div class="fw-bold mb-1" style="color: #2563eb; font-size: 1.15rem; letter-spacing: 0.02em;">
+                                ข้อกำหนดที่ 4 จาก 4
+                            </div>
+                            <h1 class="fw-bolder mb-2" style="color: #0f172a; letter-spacing: -0.02em; font-size: clamp(2rem, 3.2vw, 3rem);">
+                                จัดทำ API Documentation
+                            </h1>
+                            <h5 class="fw-bold mb-0 mt-3" style="color: #334155; font-size: 1.25rem;">
+                                เนื้อหาที่ต้องมีใน API Doc สำหรับทุก Endpoint
+                            </h5>
+                        </div>
 
-                            <div class="row g-4 align-items-stretch">
-                                <!-- Left: 4 Numbered Items -->
-                                <div class="col-lg-6">
-                                    <div class="d-flex flex-column gap-3 h-100">
-                                        <!-- Item 1 -->
-                                        <div class="p-3 rounded-4 d-flex align-items-center gap-3" style="background: #1e293b; border-left: 4px solid #3b82f6;">
-                                            <div class="fs-3 fw-bold" style="color: #3b82f6; min-width: 32px; text-align: center;">1</div>
-                                            <div>
-                                                <div class="fw-bold text-white fs-6">Endpoint URL &amp; HTTP Method</div>
-                                                <div class="small font-monospace" style="color: #94a3b8;">GET /api/v1/products · POST /api/v1/orders</div>
-                                            </div>
+                        <!-- 2-Column Grid Layout (4 Points + Dark API Doc Entry Box) -->
+                        <div class="row g-4 align-items-stretch">
+                            <!-- Left: 4 Numbered Requirement Cards -->
+                            <div class="col-lg-6">
+                                <div class="vstack gap-3 h-100 justify-content-between">
+                                    <!-- Point 1 -->
+                                    <div class="p-3 p-md-4 rounded-4 bg-white shadow-sm d-flex align-items-center gap-3" style="border-left: 5px solid #2563eb; border: 1px solid #e2e8f0; border-left-width: 5px; border-left-color: #2563eb;">
+                                        <div class="fw-bolder fs-3 text-center" style="color: #2563eb; width: 36px; min-width: 36px;">1</div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.05rem;">Endpoint URL & HTTP Method</h6>
+                                            <div class="small" style="color: #64748b;">GET /api/v1/products · POST /api/v1/orders</div>
                                         </div>
+                                    </div>
 
-                                        <!-- Item 2 -->
-                                        <div class="p-3 rounded-4 d-flex align-items-center gap-3" style="background: #1e293b; border-left: 4px solid #8b5cf6;">
-                                            <div class="fs-3 fw-bold" style="color: #8b5cf6; min-width: 32px; text-align: center;">2</div>
-                                            <div>
-                                                <div class="fw-bold text-white fs-6">Request Parameters / Body</div>
-                                                <div class="small" style="color: #94a3b8;">Header, Query String, JSON Body, Data Type</div>
-                                            </div>
+                                    <!-- Point 2 -->
+                                    <div class="p-3 p-md-4 rounded-4 bg-white shadow-sm d-flex align-items-center gap-3" style="border-left: 5px solid #8b5cf6; border: 1px solid #e2e8f0; border-left-width: 5px; border-left-color: #8b5cf6;">
+                                        <div class="fw-bolder fs-3 text-center" style="color: #8b5cf6; width: 36px; min-width: 36px;">2</div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.05rem;">Request Parameters / Body</h6>
+                                            <div class="small" style="color: #64748b;">Header, Query String, JSON Body, Data Type</div>
                                         </div>
+                                    </div>
 
-                                        <!-- Item 3 -->
-                                        <div class="p-3 rounded-4 d-flex align-items-center gap-3" style="background: #1e293b; border-left: 4px solid #06b6d4;">
-                                            <div class="fs-3 fw-bold" style="color: #06b6d4; min-width: 32px; text-align: center;">3</div>
-                                            <div>
-                                                <div class="fw-bold text-white fs-6">Response Format (JSON)</div>
-                                                <div class="small" style="color: #94a3b8;">Success / Error Response · Status Code</div>
-                                            </div>
+                                    <!-- Point 3 -->
+                                    <div class="p-3 p-md-4 rounded-4 bg-white shadow-sm d-flex align-items-center gap-3" style="border-left: 5px solid #06b6d4; border: 1px solid #e2e8f0; border-left-width: 5px; border-left-color: #06b6d4;">
+                                        <div class="fw-bolder fs-3 text-center" style="color: #06b6d4; width: 36px; min-width: 36px;">3</div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.05rem;">Response Format (JSON)</h6>
+                                            <div class="small" style="color: #64748b;">Success / Error Response · Status Code</div>
                                         </div>
+                                    </div>
 
-                                        <!-- Item 4 -->
-                                        <div class="p-3 rounded-4 d-flex align-items-center gap-3" style="background: #1e293b; border-left: 4px solid #10b981;">
-                                            <div class="fs-3 fw-bold" style="color: #10b981; min-width: 32px; text-align: center;">4</div>
-                                            <div>
-                                                <div class="fw-bold text-white fs-6">ตัวอย่าง Request &amp; Response</div>
-                                                <div class="small" style="color: #94a3b8;">ตัวอย่างข้อมูลจริงที่ระบบรับ-ส่ง</div>
-                                            </div>
+                                    <!-- Point 4 -->
+                                    <div class="p-3 p-md-4 rounded-4 bg-white shadow-sm d-flex align-items-center gap-3" style="border-left: 5px solid #10b981; border: 1px solid #e2e8f0; border-left-width: 5px; border-left-color: #10b981;">
+                                        <div class="fw-bolder fs-3 text-center" style="color: #10b981; width: 36px; min-width: 36px;">4</div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.05rem;">ตัวอย่าง Request & Response</h6>
+                                            <div class="small" style="color: #64748b;">ตัวอย่างข้อมูลจริงที่ระบบรับ-ส่ง</div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Right: ตัวอย่าง API Doc Entry Box -->
-                                <div class="col-lg-6">
-                                    <div class="p-3 p-md-4 rounded-4 h-100 d-flex flex-column justify-content-between" style="background: #1e293b; border: 1px solid #334155;">
+                            <!-- Right: Dark API Doc Entry Code Box (ตรงตามสไลด์เป๊ะ) -->
+                            <div class="col-lg-6">
+                                <div class="p-4 rounded-4 h-100 d-flex flex-column justify-content-between text-white shadow-lg" style="background: #0b1329; border: 1px solid rgba(255,255,255,0.08);">
+                                    <div>
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <div class="fw-semibold text-white fs-5">ตัวอย่าง API Doc Entry</div>
-                                            <button class="btn btn-sm btn-primary rounded-pill px-3 shadow-sm" onclick="testLiveApiDocFetch()">
-                                                <i class="fa-solid fa-bolt me-1"></i> ลองเรียก API จริง (Live Fetch)
+                                            <h4 class="fw-bold text-white mb-0" style="font-size: 1.25rem;">ตัวอย่าง API Doc Entry</h4>
+                                            <button type="button" class="btn btn-sm btn-outline-info btn-rounded px-3 py-1" onclick="testLiveApiDocFetch()">
+                                                <i class="fa-solid fa-arrow-rotate-right me-1"></i> ทดสอบเรียก API สด
                                             </button>
                                         </div>
 
-                                        <!-- Dark Terminal Code Display -->
-                                        <pre class="p-3 rounded-3 font-monospace small mb-3 text-start m-0" style="background: #090d16; color: #f8fafc; line-height: 1.6; border: 1px solid #1e293b; max-height: 290px; overflow-y: auto;" id="api-doc-entry-terminal"><span style="color: #38bdf8; font-weight: bold;">GET</span> <span style="color: #a7f3d0;">/api/v1/products</span>
+                                        <!-- Inner Terminal (Dark Navy Blue) -->
+                                        <div id="api-doc-entry-terminal" class="p-4 rounded-3 font-monospace small" style="background: #0f1c3f; border: 1px solid rgba(255,255,255,0.06); line-height: 1.7; font-size: 0.92rem;">
+                                            <div class="mb-3">
+                                                <span style="color: #38bdf8; font-weight: bold;">GET</span> <span style="color: #ffffff;">/api/v1/products</span>
+                                            </div>
 
-<span style="color: #eab308;">Headers:</span>
-Authorization: Bearer {token}
+                                            <div class="mb-1" style="color: #facc15; font-weight: 600;">Headers:</div>
+                                            <div class="mb-3 ps-2" style="color: #2dd4bf;">Authorization: Bearer {token}</div>
 
-<span style="color: #eab308;">Query:</span>
-?search=&amp;category_id=&amp;page=1
+                                            <div class="mb-1" style="color: #facc15; font-weight: 600;">Query:</div>
+                                            <div class="mb-3 ps-2" style="color: #4ade80;">?search=&category_id=&page=1</div>
 
-<span style="color: #eab308;">Response 200:</span>
-{
-  <span style="color: #38bdf8;">"status"</span>: <span style="color: #a7f3d0;">true</span>,
-  <span style="color: #38bdf8;">"data"</span>: [...],
-  <span style="color: #38bdf8;">"total"</span>: <span style="color: #f472b6; font-weight: bold;">79</span>
+                                            <div class="mb-1" style="color: #facc15; font-weight: 600;">Response 200:</div>
+                                            <pre class="m-0 ps-2" style="color: #4ade80; font-family: inherit; font-size: inherit; background: transparent; border: none; white-space: pre-wrap;">{
+  "status": true,
+  "data": [...],
+  "total": 79
+}</pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="pt-3 border-top border-white border-opacity-10 mt-3 text-white-50 small">
+                                        <i class="fa-solid fa-shield-halved text-info me-1"></i> เชื่อมต่อข้อมูลจริง Live MySQL Database (79 สินค้า · 196 ออร์เดอร์)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 4 Bottom Format Note & Download Links -->
+                        <div class="mt-4 pt-3 border-top d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                            <div class="fw-bold" style="color: #334155; font-size: 1.05rem;">
+                                รูปแบบ: Word / PDF / Postman Collection หรือ เครื่องมืออื่น ๆ เช่น Swagger
+                            </div>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="api-docs.html" target="_blank" class="btn btn-sm btn-primary btn-rounded px-3">
+                                    <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Swagger UI
+                                </a>
+                                <a href="docs/northwind_postman_collection.json" download class="btn btn-sm btn-warning text-dark btn-rounded px-3">
+                                    <i class="fa-solid fa-download me-1"></i> Postman Collection (.json)
+                                </a>
+                                <a href="docs/API_DOCUMENTATION.md" target="_blank" class="btn btn-sm btn-outline-dark btn-rounded px-3">
+                                    <i class="fa-solid fa-file-lines me-1"></i> API Doc (Markdown)
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                        </div>
+
+                        <!-- Right Side: Dark API Doc Entry Code Box (ตรงตามสไลด์ Image 2 เป๊ะ) -->
+                        <div class="col-lg-6">
+                            <div class="card border-0 shadow-lg text-white h-100" style="background: #0f172a; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1) !important;">
+                                <div class="card-header bg-transparent border-bottom border-white border-opacity-10 py-3 px-4 d-flex justify-content-between align-items-center">
+                                    <div class="fw-bold text-white-50 small">ตัวอย่าง API Doc Entry</div>
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">
+                                        RESTful API Spec
+                                    </span>
+                                </div>
+                                <div class="card-body p-4 font-monospace">
+                                    <div class="mb-3">
+                                        <span class="badge bg-success me-1">GET</span> <span style="color: #60a5fa;">/api/v1/products</span>
+                                    </div>
+
+                                    <div class="text-white-50 small mb-1">Headers:</div>
+                                    <div style="color: #38bdf8;" class="small mb-3">Authorization: Bearer {token}</div>
+
+                                    <div class="text-white-50 small mb-1">Query:</div>
+                                    <div style="color: #a7f3d0;" class="small mb-3">?search=&category_id=&page=1</div>
+
+                                    <div class="text-white-50 small mb-1">Response 200:</div>
+                                    <pre class="m-0 small" style="color: #facc15; background: transparent; border: none; line-height: 1.5;">{
+  "status": true,
+  "data": [...],
+  "total": 79
 }</pre>
 
-                                        <div class="small text-secondary" style="color: #94a3b8 !important;">
-                                            รูปแบบ: Word / PDF / Postman Collection หรือ เครื่องมืออื่น ๆ เช่น Swagger
+                                    <!-- Live API Fetch Terminal -->
+                                    <div class="mt-4 pt-3 border-top border-white border-opacity-10">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="small text-white-50"><i class="fa-solid fa-cloud-arrow-down me-1"></i> ยิงทดสอบ Endpoint จริงจาก MySQL:</span>
+                                            <button type="button" class="btn btn-sm btn-primary btn-rounded px-3" onclick="testLiveApiDocFetch()">
+                                                <i class="fa-solid fa-bolt me-1"></i> ยิง GET /api/v1/products
+                                            </button>
+                                        </div>
+                                        <div id="api-doc-entry-terminal" class="p-3 rounded-3 bg-black bg-opacity-50 text-white font-monospace small" style="max-height: 160px; overflow-y: auto; font-size: 0.76rem;">
+// คลิกปุ่ม "ยิง GET /api/v1/products" เพื่อดู Response สดจากฐานข้อมูล MySQL (79 รายการ)
                                         </div>
                                     </div>
                                 </div>
@@ -1793,360 +1846,174 @@ Authorization: Bearer {token}
                         </div>
                     </div>
 
-                    <!-- Additional Detailed Endpoints Table & Documentation Card -->
-                    <div class="card shadow-sm border-0 mb-4" style="border-radius: 14px;">
-                        <div class="card-header bg-transparent py-3 border-bottom d-flex justify-content-between align-items-center">
+                    <!-- Bottom Documentation Links & Formats (ตามสไลด์ Image 2: รูปแบบ: Word / PDF / Postman Collection หรือ เครื่องมืออื่น ๆ เช่น Swagger) -->
+                    <div class="card border-0 shadow-sm mt-4 p-4 rounded-4 bg-body-tertiary">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
                             <div>
-                                <h5 class="m-0 fw-bold text-primary"><i class="fa-solid fa-list-check me-2"></i> RESTful Endpoints ทั้งหมดในระบบ Northwind BMS</h5>
-                                <p class="text-muted small mb-0 mt-1">สถาปัตยกรรม RESTful PHP API พร้อมรองรับทั้ง JSON Body และ Prepared Statement</p>
+                                <h6 class="fw-bold mb-1">รูปแบบเอกสาร: Word / PDF / Postman Collection หรือ เครื่องมืออื่น ๆ เช่น Swagger</h6>
+                                <p class="text-muted small mb-0">เลือกเปิดดูเอกสาร API ในรูปแบบที่ต้องการ หรือนำไฟล์ไปทดสอบใน Postman</p>
                             </div>
-                            <a href="api-docs.html" target="_blank" class="btn btn-sm btn-outline-primary btn-rounded"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i> เปิด Swagger UI เต็มรูปแบบ</a>
-                        </div>
-                        <div class="card-body p-4">
-                            <!-- Endpoint 1 -->
-                            <div class="card border p-3 mb-3 bg-body-tertiary">
-                                <div class="d-flex align-items-center gap-2 mb-2">
-                                    <span class="badge bg-success fs-6">GET</span>
-                                    <code class="fs-6 fw-bold">/api/v1/products</code>
-                                </div>
-                                <p class="small text-muted mb-2">ดึงรายการสินค้าทั้งหมด (79 รายการ) รองรับ Search, Category Filter และ Pagination</p>
-                                <div class="code-block mb-2">
-Headers: Authorization: Bearer {JWT_TOKEN}
-Query Params: ?search=chai&amp;category_id=1&amp;page=1&amp;limit=10
-                                </div>
-                            </div>
-
-                            <!-- Endpoint 2 -->
-                            <div class="card border p-3 mb-3 bg-body-tertiary">
-                                <div class="d-flex align-items-center gap-2 mb-2">
-                                    <span class="badge bg-primary fs-6">POST</span>
-                                    <code class="fs-6 fw-bold">/api/v1/products</code>
-                                </div>
-                                <p class="small text-muted mb-2">เพิ่มรายการสินค้าใหม่ลงในฐานข้อมูล (Bind Parameter Validation)</p>
-                                <div class="code-block mb-2">
-Headers: Authorization: Bearer {JWT_TOKEN}
-Content-Type: application/json
-Body:
-{
-  "product_name": "New Product",
-  "category_id": 1,
-  "supplier_id": 2,
-  "unit_price": 25.50,
-  "units_in_stock": 100
-}
-                                </div>
-                            </div>
-
-                            <!-- Endpoint 3 -->
-                            <div class="card border p-3 mb-3 bg-body-tertiary">
-                                <div class="d-flex align-items-center gap-2 mb-2">
-                                    <span class="badge bg-warning text-dark fs-6">PUT</span>
-                                    <code class="fs-6 fw-bold">/api/v1/products/{id}</code>
-                                </div>
-                                <p class="small text-muted mb-2">อัปเดตข้อมูลสินค้าโดยระบุ ID</p>
-                            </div>
-
-                            <!-- Endpoint 4 -->
-                            <div class="card border p-3 bg-body-tertiary">
-                                <div class="d-flex align-items-center gap-2 mb-2">
-                                    <span class="badge bg-danger fs-6">DELETE</span>
-                                    <code class="fs-6 fw-bold">/api/v1/products/{id}</code>
-                                </div>
-                                <p class="small text-muted mb-2">ลบรายการสินค้าออกจากฐานข้อมูล</p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="api-docs.html" target="_blank" class="btn btn-sm btn-primary btn-rounded px-3">
+                                    <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> เปิด Swagger UI เต็มรูปแบบ
+                                </a>
+                                <a href="docs/northwind_postman_collection.json" download class="btn btn-sm btn-outline-warning text-dark btn-rounded px-3">
+                                    <i class="fa-solid fa-download me-1"></i> Postman Collection (.json)
+                                </a>
+                                <a href="docs/API_DOCUMENTATION.md" target="_blank" class="btn btn-sm btn-outline-secondary btn-rounded px-3">
+                                    <i class="fa-solid fa-file-lines me-1"></i> เอกสาร Markdown (API Doc)
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- PHP ARCHITECTURE SPEC SHOWCASE -->
-                <!-- PHP ARCHITECTURE & 4 PROJECT REQUIREMENTS (ตามสไลด์อาจารย์ทั้ง 4 ข้อ) -->
+<!-- SCREEN: TECHNOLOGY STACK & ARCHITECTURE (ข้อกำหนดที่ 1 จาก 4 - ตรงตามสไลด์เป๊ะ 100%) -->
                 <div id="view-architecture" class="view-tab d-none">
-                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
-                        <div>
-                            <h4 class="fw-bold mb-1"><i class="fa-solid fa-cubes text-primary me-2"></i> สถาปัตยกรรมระบบ & ข้อกำหนดโครงงาน 4 ด้าน</h4>
-                            <p class="text-muted small mb-0">Northwind BMS (CPE PSRU) ครบถ้วนตามมาตรฐานโครงงานวิศวกรรมคอมพิวเตอร์</p>
+                    <!-- Slide 1 Canvas Container with Dark Navy Canvas (เหมือนสไลด์ต้นฉบับ) -->
+                    <div class="p-4 p-lg-5 rounded-4 shadow-lg text-white mb-4" style="background: #0a1128; border: 1px solid rgba(255,255,255,0.08);">
+                        <!-- Slide Header -->
+                        <div class="mb-4">
+                            <div class="fw-bold mb-1" style="color: #38bdf8; font-size: 1.15rem; letter-spacing: 0.02em;">
+                                ข้อกำหนดที่ 1 จาก 4
+                            </div>
+                            <h1 class="fw-bolder mb-2 text-white" style="letter-spacing: -0.02em; font-size: clamp(2rem, 3.2vw, 3rem);">
+                                Technology Stack ที่ใช้ในการพัฒนา
+                            </h1>
+                            <p class="text-white-50 small mb-0">ระบบ Northwind BMS พัฒนาตามมาตรฐานโครงสร้าง Software Architecture ประจำวิชา</p>
                         </div>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-sm btn-outline-primary btn-rounded" onclick="switchTab('apidoc')">
-                                <i class="fa-solid fa-code me-1"></i> ดูเอกสาร API
-                            </button>
-                            <button class="btn btn-sm btn-primary btn-rounded" data-bs-toggle="modal" data-bs-target="#screenNavModal">
-                                <i class="fa-solid fa-compass me-1"></i> สลับโมดูลระบบ
-                            </button>
-                        </div>
-                    </div>
 
-                    <!-- SLIDE 1: TECHNOLOGY STACK REPLICA -->
-                    <div class="card border-0 shadow-lg mb-4 text-white overflow-hidden" style="background: #0f172a; border-radius: 16px;">
-                        <div class="p-4 p-md-5">
-                            <div class="fw-bold mb-1" style="font-size: 1.05rem; color: #38bdf8 !important;">ข้อกำหนดที่ 1 จาก 4</div>
-                            <h2 class="fw-bold mb-4 text-white" style="letter-spacing: -0.02em; font-size: 2.2rem;">Technology Stack ที่ใช้ในการพัฒนา</h2>
-
-                            <div class="row g-4 align-items-stretch">
-                                <!-- Left: 4 Cards in 2x2 Grid -->
-                                <div class="col-lg-7">
-                                    <div class="row g-3 h-100">
-                                        <!-- Card 1: Front-End -->
-                                        <div class="col-sm-6">
-                                            <div class="p-3 rounded-4 h-100 position-relative" style="background: #1e293b; border-left: 4px solid #3b82f6;">
-                                                <div class="d-flex align-items-center gap-2 mb-2">
-                                                    <span class="fs-5">🎨</span>
-                                                    <span class="fw-semibold text-secondary small" style="color: #94a3b8 !important;">Front-End</span>
-                                                </div>
-                                                <div class="fw-bold fs-5 text-white mb-1">Bootstrap 5 Framework</div>
-                                                <div class="small" style="color: #94a3b8;">Responsive UI · Components · Grid System</div>
+                        <!-- 2-Column Grid Layout (Cards + Code Sample) -->
+                        <div class="row g-4 align-items-stretch">
+                            <!-- Left: 4 Core Architecture Cards (2x2 Grid) -->
+                            <div class="col-lg-6">
+                                <div class="row g-3 h-100">
+                                    <!-- Card 1: Front-End (Blue border) -->
+                                    <div class="col-sm-6">
+                                        <div class="p-4 rounded-4 h-100 d-flex flex-column justify-content-center" style="background: #111c38; border: 2px solid #2563eb; transition: transform 0.2s;" onmouseenter="this.style.transform='translateY(-3px)'" onmouseleave="this.style.transform='translateY(0)'">
+                                            <div class="small fw-bold mb-2 d-flex align-items-center gap-2" style="color: #f59e0b;">
+                                                <i class="fa-solid fa-palette fs-6"></i>
+                                                <span>Front-End</span>
                                             </div>
+                                            <h4 class="fw-bold text-white mb-2" style="font-size: 1.25rem;">Bootstrap 5 Framework</h4>
+                                            <p class="mb-0 small" style="color: #94a3b8; line-height: 1.5;">Responsive UI · Components · Grid System</p>
                                         </div>
+                                    </div>
 
-                                        <!-- Card 2: Database Connection -->
-                                        <div class="col-sm-6">
-                                            <div class="p-3 rounded-4 h-100 position-relative" style="background: #1e293b; border-left: 4px solid #10b981;">
-                                                <div class="d-flex align-items-center gap-2 mb-2">
-                                                    <span class="fs-5">🗄️</span>
-                                                    <span class="fw-semibold text-secondary small" style="color: #94a3b8 !important;">Database Connection</span>
-                                                </div>
-                                                <div class="fw-bold fs-5 text-white mb-1">PDO แบบ OOP Style</div>
-                                                <div class="small" style="color: #94a3b8;">เชื่อมต่อและจัดการฐานข้อมูลด้วย PDO Class</div>
+                                    <!-- Card 2: Database Connection (Teal border) -->
+                                    <div class="col-sm-6">
+                                        <div class="p-4 rounded-4 h-100 d-flex flex-column justify-content-center" style="background: #111c38; border: 2px solid #06b6d4; transition: transform 0.2s;" onmouseenter="this.style.transform='translateY(-3px)'" onmouseleave="this.style.transform='translateY(0)'">
+                                            <div class="small fw-bold mb-2 d-flex align-items-center gap-2" style="color: #10b981;">
+                                                <i class="fa-solid fa-server fs-6"></i>
+                                                <span>Database Connection</span>
                                             </div>
+                                            <h4 class="fw-bold text-white mb-2" style="font-size: 1.25rem;">PDO แบบ OOP Style</h4>
+                                            <p class="mb-0 small" style="color: #94a3b8; line-height: 1.5;">เชื่อมต่อและจัดการฐานข้อมูลด้วย PDO Class</p>
                                         </div>
+                                    </div>
 
-                                        <!-- Card 3: Back-End -->
-                                        <div class="col-sm-6">
-                                            <div class="p-3 rounded-4 h-100 position-relative" style="background: #1e293b; border-left: 4px solid #8b5cf6;">
-                                                <div class="d-flex align-items-center gap-2 mb-2">
-                                                    <span class="fs-5">⚙️</span>
-                                                    <span class="fw-semibold text-secondary small" style="color: #94a3b8 !important;">Back-End</span>
-                                                </div>
-                                                <div class="fw-bold fs-5 text-white mb-1">PHP · API Architecture</div>
-                                                <div class="small" style="color: #94a3b8;">RESTful API ตามโครงสร้างที่สอนในชั้นเรียน</div>
+                                    <!-- Card 3: Back-End (Purple border) -->
+                                    <div class="col-sm-6">
+                                        <div class="p-4 rounded-4 h-100 d-flex flex-column justify-content-center" style="background: #111c38; border: 2px solid #8b5cf6; transition: transform 0.2s;" onmouseenter="this.style.transform='translateY(-3px)'" onmouseleave="this.style.transform='translateY(0)'">
+                                            <div class="small fw-bold mb-2 d-flex align-items-center gap-2" style="color: #a855f7;">
+                                                <i class="fa-solid fa-gear fs-6"></i>
+                                                <span>Back-End</span>
                                             </div>
+                                            <h4 class="fw-bold text-white mb-2" style="font-size: 1.25rem;">PHP · API Architecture</h4>
+                                            <p class="mb-0 small" style="color: #94a3b8; line-height: 1.5;">RESTful API ตามโครงสร้างที่สอนในชั้นเรียน</p>
                                         </div>
+                                    </div>
 
-                                        <!-- Card 4: SQL Security -->
-                                        <div class="col-sm-6">
-                                            <div class="p-3 rounded-4 h-100 position-relative" style="background: #1e293b; border-left: 4px solid #f59e0b;">
-                                                <div class="d-flex align-items-center gap-2 mb-2">
-                                                    <span class="fs-5">🔒</span>
-                                                    <span class="fw-semibold text-secondary small" style="color: #94a3b8 !important;">SQL Security</span>
-                                                </div>
-                                                <div class="fw-bold fs-5 text-white mb-1">เขียน SQL แบบ Bind Parameter</div>
-                                                <div class="small" style="color: #94a3b8;">ป้องกัน SQL Injection ทุก Query</div>
+                                    <!-- Card 4: SQL Security (Amber border) -->
+                                    <div class="col-sm-6">
+                                        <div class="p-4 rounded-4 h-100 d-flex flex-column justify-content-center" style="background: #111c38; border: 2px solid #f59e0b; transition: transform 0.2s;" onmouseenter="this.style.transform='translateY(-3px)'" onmouseleave="this.style.transform='translateY(0)'">
+                                            <div class="small fw-bold mb-2 d-flex align-items-center gap-2" style="color: #fbbf24;">
+                                                <i class="fa-solid fa-lock fs-6"></i>
+                                                <span>SQL Security</span>
                                             </div>
+                                            <h4 class="fw-bold text-white mb-2" style="font-size: 1.25rem;">เขียน SQL แบบ Bind Parameter</h4>
+                                            <p class="mb-0 small" style="color: #94a3b8; line-height: 1.5;">ป้องกัน SQL Injection ทุก Query</p>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Right: Code Preview Container -->
-                                <div class="col-lg-5">
-                                    <div class="p-3 p-md-4 rounded-4 h-100 d-flex flex-column justify-content-between" style="background: #1e293b; border: 1px solid #334155;">
+                            <!-- Right: Code Snippet Card (ตรงตามสไลด์เป๊ะ) -->
+                            <div class="col-lg-6">
+                                <div class="p-4 rounded-4 h-100 d-flex flex-column justify-content-between" style="background: #111c38; border: 1px solid rgba(255,255,255,0.1);">
+                                    <div>
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <div class="fw-semibold text-white fs-5">ตัวอย่าง Code ที่ถูกต้อง</div>
-                                            <button class="btn btn-sm btn-outline-info rounded-pill px-3" onclick="testLiveSqlSnippet()">
-                                                <i class="fa-solid fa-play me-1"></i> รัน Code นี้จริง
+                                            <h4 class="fw-bold text-white mb-0" style="font-size: 1.25rem;">ตัวอย่าง Code ที่ถูกต้อง</h4>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1">
+                                                <i class="fa-solid fa-circle-check me-1"></i> PDO · OOP
+                                            </span>
+                                        </div>
+
+                                        <!-- Dark Code Box -->
+                                        <div class="p-4 rounded-3 mb-3 font-monospace" style="background: #070d19; border: 1px solid rgba(255,255,255,0.06); font-size: 0.95rem; line-height: 1.8;">
+                                            <div><span style="color: #38bdf8;">$db</span> <span style="color: #f43f5e;">=</span> <span style="color: #facc15;">new</span> <span style="color: #a7f3d0;">Database</span>();</div>
+                                            <div><span style="color: #38bdf8;">$conn</span> <span style="color: #f43f5e;">=</span> <span style="color: #38bdf8;">$db</span><span style="color: #f43f5e;">-&gt;</span>getConnection();</div>
+                                            <div class="my-2"></div>
+                                            <div><span style="color: #38bdf8;">$sql</span> <span style="color: #f43f5e;">=</span> <span style="color: #4ade80;">"SELECT * FROM tb_products WHERE i_productid = ?"</span>;</div>
+                                            <div><span style="color: #38bdf8;">$stmt</span> <span style="color: #f43f5e;">=</span> <span style="color: #38bdf8;">$conn</span><span style="color: #f43f5e;">-&gt;</span>prepare(<span style="color: #38bdf8;">$sql</span>);</div>
+                                            <div><span style="color: #38bdf8;">$stmt</span><span style="color: #f43f5e;">-&gt;</span>execute([<span style="color: #38bdf8;">$id</span>]);</div>
+                                            <div><span style="color: #38bdf8;">$row</span> <span style="color: #f43f5e;">=</span> <span style="color: #38bdf8;">$stmt</span><span style="color: #f43f5e;">-&gt;</span>fetch();</div>
+                                        </div>
+
+                                        <!-- Green check mark badge footer from slide -->
+                                        <div class="d-flex align-items-center gap-2 mb-3" style="color: #10b981; font-weight: 600; font-size: 0.95rem;">
+                                            <i class="fa-solid fa-check fs-5"></i>
+                                            <span>PDO · OOP · Bind Parameter</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Interactive Live Run Test Tool on Live MySQL Database -->
+                                    <div class="pt-3 border-top border-white border-opacity-10">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="small text-white-50"><i class="fa-solid fa-play me-1 text-success"></i> ทดสอบ Query จริงจาก MySQL (Railway):</span>
+                                            <button type="button" class="btn btn-sm btn-success btn-rounded px-3" onclick="testLiveSqlSnippet()">
+                                                <i class="fa-solid fa-bolt me-1"></i> รันคำสั่ง ($id = 1)
                                             </button>
                                         </div>
-                                        <div class="p-3 rounded-3 font-monospace small mb-3 text-start" style="background: #090d16; color: #38bdf8; line-height: 1.65; border: 1px solid #1e293b;">
-                                            <span style="color: #7dd3fc;">$db</span> = <span style="color: #f472b6;">new</span> Database();<br>
-                                            <span style="color: #7dd3fc;">$conn</span> = <span style="color: #7dd3fc;">$db</span>-&gt;<span style="color: #60a5fa;">getConnection</span>();<br><br>
-                                            <span style="color: #7dd3fc;">$sql</span> = <span style="color: #a7f3d0;">"SELECT * FROM<br>tb_products WHERE<br>i_productid = ?"</span>;<br>
-                                            <span style="color: #7dd3fc;">$stmt</span> = <span style="color: #7dd3fc;">$conn</span>-&gt;<span style="color: #60a5fa;">prepare</span>(<span style="color: #7dd3fc;">$sql</span>);<br>
-                                            <span style="color: #7dd3fc;">$stmt</span>-&gt;<span style="color: #60a5fa;">execute</span>([<span style="color: #7dd3fc;">$id</span>]);<br>
-                                            <span style="color: #7dd3fc;">$row</span> = <span style="color: #7dd3fc;">$stmt</span>-&gt;<span style="color: #60a5fa;">fetch</span>();
+                                        <div id="live-sql-snippet-output" class="p-3 rounded-3 bg-black bg-opacity-75 text-white font-monospace small d-none" style="max-height: 140px; overflow-y: auto; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.1);">
+                                            // ผลลัพธ์ข้อมูลจริงจะแสดงที่นี่
                                         </div>
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="small fw-semibold text-success"><i class="fa-solid fa-check me-1"></i> PDO · OOP · Bind Parameter</div>
-                                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">100% Secure</span>
-                                        </div>
-                                        <!-- Dynamic Live Output Area -->
-                                        <div id="live-sql-snippet-output" class="d-none mt-2 p-2 rounded-2 font-monospace small" style="background: #040711; color: #a7f3d0; max-height: 140px; overflow-y: auto;"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- SYSTEM CAPABILITIES & SPECIFICATION CARDS -->
-                    <div class="row g-4 mb-4">
-
-                        <!-- System Modules Directory -->
+                        <!-- Right Side: Dark Code Snippet Box (ตรงตามสไลด์ Image 1 เป๊ะ) -->
                         <div class="col-lg-6">
-                            <div class="card h-100 border-0 shadow-sm" style="border-radius: var(--card-radius); overflow: hidden;">
-                                <div class="card-header bg-dark text-white py-3 px-4 d-flex justify-content-between align-items-center">
-                                    <div class="fw-bold"><i class="fa-solid fa-window-restore me-2 text-warning"></i> แผนผังโมดูลทั้งหมดของระบบ (System Modules Directory)</div>
-                                    <span class="badge bg-warning text-dark rounded-pill">All Modules</span>
+                            <div class="card border-0 shadow-lg text-white h-100" style="background: #0f172a; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1) !important;">
+                                <div class="card-header bg-transparent border-bottom border-white border-opacity-10 py-3 px-4 d-flex justify-content-between align-items-center">
+                                    <div class="fw-bold text-white-50 small">ตัวอย่าง Code ที่ถูกต้อง</div>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
+                                        <i class="fa-solid fa-check me-1"></i> PDO · OOP · Bind Parameter
+                                    </span>
                                 </div>
                                 <div class="card-body p-4">
-                                    <p class="text-muted small mb-3">พัฒนาหน้าจอระบบตามข้อกำหนดครบ 12 หน้าจอ (คลิกที่การ์ดเพื่อสลับไปยังหน้าจอได้ทันที):</p>
-                                    <div class="row g-2">
-                                        <div class="col-4">
-                                            <button class="btn btn-outline-secondary w-100 text-start py-2 px-2 d-flex align-items-center gap-2 text-truncate" onclick="switchTab('login')">
-                                                <i class="fa-solid fa-right-to-bracket text-primary"></i>
-                                                <span class="small fw-semibold text-truncate">เข้าสู่ระบบ</span>
-                                            </button>
-                                        </div>
-                                        <div class="col-4">
-                                            <button class="btn btn-outline-secondary w-100 text-start py-2 px-2 d-flex align-items-center gap-2 text-truncate" onclick="switchTab('dashboard')">
-                                                <i class="fa-solid fa-chart-pie text-primary"></i>
-                                                <span class="small fw-semibold text-truncate">แดชบอร์ด</span>
-                                            </button>
-                                        </div>
-                                        <div class="col-4">
-                                            <button class="btn btn-outline-secondary w-100 text-start py-2 px-2 d-flex align-items-center gap-2 text-truncate" onclick="switchTab('products')">
-                                                <i class="fa-solid fa-box text-warning"></i>
-                                                <span class="small fw-semibold text-truncate">รายการสินค้า</span>
-                                            </button>
-                                        </div>
-                                        <div class="col-4">
-                                            <button class="btn btn-outline-secondary w-100 text-start py-2 px-2 d-flex align-items-center gap-2 text-truncate" onclick="switchTab('product-form')">
-                                                <i class="fa-solid fa-plus-circle text-success"></i>
-                                                <span class="small fw-semibold text-truncate">เพิ่ม/แก้ไขสินค้า</span>
-                                            </button>
-                                        </div>
-                                        <div class="col-4">
-                                            <button class="btn btn-outline-secondary w-100 text-start py-2 px-2 d-flex align-items-center gap-2 text-truncate" onclick="switchTab('categories')">
-                                                <i class="fa-solid fa-tags text-info"></i>
-                                                <span class="small fw-semibold text-truncate">หมวดหมู่สินค้า</span>
-                                            </button>
-                                        </div>
-                                        <div class="col-4">
-                                            <button class="btn btn-outline-secondary w-100 text-start py-2 px-2 d-flex align-items-center gap-2 text-truncate" onclick="switchTab('orders')">
-                                                <i class="fa-solid fa-cart-shopping text-danger"></i>
-                                                <span class="small fw-semibold text-truncate">คำสั่งซื้อ</span>
-                                            </button>
-                                        </div>
-                                        <div class="col-4">
-                                            <button class="btn btn-outline-secondary w-100 text-start py-2 px-2 d-flex align-items-center gap-2 text-truncate" onclick="switchTab('order-detail')">
-                                                <i class="fa-solid fa-file-invoice text-primary"></i>
-                                                <span class="small fw-semibold text-truncate">รายละเอียดออเดอร์</span>
-                                            </button>
-                                        </div>
-                                        <div class="col-4">
-                                            <button class="btn btn-outline-secondary w-100 text-start py-2 px-2 d-flex align-items-center gap-2 text-truncate" onclick="switchTab('customers')">
-                                                <i class="fa-solid fa-users text-primary"></i>
-                                                <span class="small fw-semibold text-truncate">ลูกค้า</span>
-                                            </button>
-                                        </div>
-                                        <div class="col-4">
-                                            <button class="btn btn-outline-secondary w-100 text-start py-2 px-2 d-flex align-items-center gap-2 text-truncate" onclick="switchTab('suppliers')">
-                                                <i class="fa-solid fa-truck-field text-warning"></i>
-                                                <span class="small fw-semibold text-truncate">ผู้จัดจำหน่าย</span>
-                                            </button>
-                                        </div>
-                                        <div class="col-4">
-                                            <button class="btn btn-outline-secondary w-100 text-start py-2 px-2 d-flex align-items-center gap-2 text-truncate" onclick="switchTab('employees')">
-                                                <i class="fa-solid fa-user-tie text-info"></i>
-                                                <span class="small fw-semibold text-truncate">พนักงาน</span>
-                                            </button>
-                                        </div>
-                                        <div class="col-4">
-                                            <button class="btn btn-outline-secondary w-100 text-start py-2 px-2 d-flex align-items-center gap-2 text-truncate" onclick="switchTab('shippers')">
-                                                <i class="fa-solid fa-truck-fast text-success"></i>
-                                                <span class="small fw-semibold text-truncate">บริษัทขนส่ง</span>
-                                            </button>
-                                        </div>
-                                        <div class="col-4">
-                                            <button class="btn btn-outline-secondary w-100 text-start py-2 px-2 d-flex align-items-center gap-2 text-truncate" onclick="switchTab('reports')">
-                                                <i class="fa-solid fa-chart-column text-danger"></i>
-                                                <span class="small fw-semibold text-truncate">รายงานสถิติ</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="mt-3 text-center">
-                                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#screenNavModal">
-                                            <i class="fa-solid fa-arrows-split-up-and-left me-1"></i> เปิดตัวเลือกสลับหน้าจอแบบจัด 4 สัดส่วน (Ctrl+K)
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                    <pre class="m-0 font-monospace" style="color: #38bdf8; font-size: 0.92rem; line-height: 1.7; background: transparent; border: none;"><span style="color: #94a3b8;">$db = new Database();</span>
+<span style="color: #94a3b8;">$conn = $db->getConnection();</span>
 
-                        <!-- Server & Hosting Deployment -->
-                        <div class="col-lg-6">
-                            <div class="card h-100 border-0 shadow-sm" style="border-radius: var(--card-radius); overflow: hidden;">
-                                <div class="card-header bg-success text-white py-3 px-4 d-flex justify-content-between align-items-center">
-                                    <div class="fw-bold"><i class="fa-solid fa-cloud-arrow-up me-2"></i> สถานะเซิร์ฟเวอร์ & การนำขึ้นใช้งาน (Server & Hosting Deployment)</div>
-                                    <span class="badge bg-white text-success rounded-pill">Production Ready</span>
-                                </div>
-                                <div class="card-body p-4">
-                                    <div class="row g-2 mb-3">
-                                        <div class="col-sm-6">
-                                            <div class="p-2 border rounded-3 bg-body-tertiary">
-                                                <div class="small fw-bold text-success"><i class="fa-solid fa-globe me-1"></i> Deploy บน Web Hosting</div>
-                                                <div class="small text-muted">Hostinger, SiteGround, InfinityFree หรือ VPS</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="p-2 border rounded-3 bg-body-tertiary">
-                                                <div class="small fw-bold text-primary"><i class="fa-solid fa-link me-1"></i> ส่ง Public URL</div>
-                                                <div class="small text-muted">ลิงก์เข้าถึงได้จากเน็ตให้อาจารย์ตรวจตรง</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="p-2 border rounded-3 bg-body-tertiary">
-                                                <div class="small fw-bold text-warning"><i class="fa-solid fa-database me-1"></i> Import ฐานข้อมูล (dbNorthwind.sql)</div>
-                                                <div class="small text-muted">ฐานข้อมูล MySQL 8 ตาราง พร้อมข้อมูลทำงานจริง</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <h6 class="fw-bold small text-muted text-uppercase mb-2"><i class="fa-solid fa-list-check me-1"></i> Checklist ก่อนส่งงาน:</h6>
-                                    <ul class="list-group list-group-flush small">
-                                        <li class="list-group-item d-flex align-items-center px-0 bg-transparent">
-                                            <i class="fa-solid fa-circle-check text-success me-2"></i> ระบบทำงานได้จาก URL จริง
-                                        </li>
-                                        <li class="list-group-item d-flex align-items-center px-0 bg-transparent">
-                                            <i class="fa-solid fa-circle-check text-success me-2"></i> Login เข้าสู่ระบบได้ (JWT Token Auth)
-                                        </li>
-                                        <li class="list-group-item d-flex align-items-center px-0 bg-transparent">
-                                            <i class="fa-solid fa-circle-check text-success me-2"></i> ข้อมูลแสดงผลถูกต้องจาก DB (MySQL 8 ตาราง)
-                                        </li>
-                                        <li class="list-group-item d-flex align-items-center px-0 bg-transparent">
-                                            <i class="fa-solid fa-circle-check text-success me-2"></i> CRUD ทำงานได้ครบถ้วน (เพิ่ม/ลบ/แก้ไข/ค้นหา)
-                                        </li>
-                                        <li class="list-group-item d-flex align-items-center px-0 bg-transparent">
-                                            <i class="fa-solid fa-circle-check text-success me-2"></i> ส่ง Public URL ให้อาจารย์ตรวจ (เช่น https://your-domain.com/northwind/)
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+<span style="color: #60a5fa;">$sql = "SELECT * FROM tb_products WHERE i_productid = ?";</span>
+<span style="color: #f472b6;">$stmt = $conn->prepare($sql);</span>
+<span style="color: #34d399;">$stmt->execute([$id]);</span>
+<span style="color: #facc15;">$row = $stmt->fetch();</span></pre>
 
-                        <!-- API Documentation & Services -->
-                        <div class="col-lg-6">
-                            <div class="card h-100 border-0 shadow-sm" style="border-radius: var(--card-radius); overflow: hidden;">
-                                <div class="card-header bg-info text-dark py-3 px-4 d-flex justify-content-between align-items-center">
-                                    <div class="fw-bold"><i class="fa-solid fa-book-bookmark me-2"></i> บริการเอกสารและการเชื่อมต่อ API (RESTful API Services)</div>
-                                    <span class="badge bg-dark text-white rounded-pill">RESTful API</span>
-                                </div>
-                                <div class="card-body p-4">
-                                    <p class="text-muted small mb-3">เนื้อหาที่ต้องมีใน API Doc สำหรับทุก Endpoint ครบทั้ง 4 ด้าน:</p>
-                                    <div class="vstack gap-2 mb-3">
-                                        <div class="p-2 border rounded-3 bg-body-tertiary d-flex align-items-center gap-2">
-                                            <span class="badge bg-primary rounded-circle">1</span>
-                                            <span class="small fw-semibold">Endpoint URL & HTTP Method (GET, POST, PUT, DELETE)</span>
+                                    <!-- Live Execution Terminal -->
+                                    <div class="mt-4 pt-3 border-top border-white border-opacity-10">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="small text-white-50"><i class="fa-solid fa-terminal me-1"></i> ทดสอบรัน SQL Bind Parameter บนฐานข้อมูลจริง:</span>
+                                            <button type="button" class="btn btn-sm btn-success btn-rounded px-3" onclick="testLiveSqlSnippet()">
+                                                <i class="fa-solid fa-play me-1"></i> รัน Query จริง ($id = 1)
+                                            </button>
                                         </div>
-                                        <div class="p-2 border rounded-3 bg-body-tertiary d-flex align-items-center gap-2">
-                                            <span class="badge bg-primary rounded-circle">2</span>
-                                            <span class="small fw-semibold">Request Parameters / Body (Headers, Query String, JSON Body)</span>
+                                        <div id="live-sql-snippet-output" class="p-3 rounded-3 bg-black bg-opacity-50 text-white font-monospace small d-none" style="max-height: 140px; overflow-y: auto; font-size: 0.78rem;">
+                                            // ผลลัพธ์จะปรากฏที่นี่
                                         </div>
-                                        <div class="p-2 border rounded-3 bg-body-tertiary d-flex align-items-center gap-2">
-                                            <span class="badge bg-primary rounded-circle">3</span>
-                                            <span class="small fw-semibold">Response Format JSON (Success / Error Response &#xb7; Status Code)</span>
-                                        </div>
-                                        <div class="p-2 border rounded-3 bg-body-tertiary d-flex align-items-center gap-2">
-                                            <span class="badge bg-primary rounded-circle">4</span>
-                                            <span class="small fw-semibold">ตัวอย่าง Request & Response (ตัวอย่างข้อมูลจริงที่รับ-ส่ง)</span>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <a href="api-docs.html" target="_blank" class="btn btn-sm btn-outline-primary btn-rounded">
-                                            <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Swagger Interactive UI
-                                        </a>
-                                        <button class="btn btn-sm btn-outline-secondary btn-rounded" onclick="switchTab('apidoc')">
-                                            <i class="fa-solid fa-code me-1"></i> API Doc ในระบบ
-                                        </button>
-                                        <a href="docs/northwind_postman_collection.json" download class="btn btn-sm btn-outline-warning text-dark btn-rounded">
-                                            <i class="fa-solid fa-download me-1"></i> Postman Collection
-                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -3572,7 +3439,6 @@ Body:
                 renderOrdersTable();
                 renderProductsTable();
                 initCharts();
-                loadLiveDatabaseData();
 
                 const prefDefault = localStorage.getItem('northwind_pref_default_view') || 'dashboard';
                 switchTab(prefDefault);
@@ -3992,58 +3858,97 @@ Body:
         }
 
 
-        // --- Live Real Database Data Fetching Engine (ข้อกำหนด 1 & 4) ---
+        // --- DOM Ready Bootstrapping ---
+        
+        // ==========================================
+        // REAL MYSQL DATABASE CONNECTOR & SYNCHRONIZER
+        // (ดึงข้อมูลจริงจากฐานข้อมูล MySQL เข้าสู่หน้าจอ)
+        // ==========================================
         async function loadLiveDatabaseData() {
             try {
-                // 1. Fetch Real Products (tb_products, 79 rows)
+                // 1. Fetch Dashboard Stats (Real MySQL data)
+                const statsRes = await fetch('api/index.php?route=dashboard/stats');
+                if (statsRes.ok) {
+                    const statsJson = await statsRes.json();
+                    if (statsJson.status && statsJson.data) {
+                        const kpis = statsJson.data.kpis;
+                        if (kpis) {
+                            const kpiOrd = document.getElementById('kpi-orders-count');
+                            if (kpiOrd) kpiOrd.innerText = kpis.total_orders + ' รายการ';
+                            const kpiProd = document.getElementById('kpi-products-count');
+                            if (kpiProd) kpiProd.innerText = kpis.total_products + ' รายการ';
+                            const kpiCust = document.getElementById('kpi-customers-count');
+                            if (kpiCust) kpiCust.innerText = kpis.total_customers + ' ราย';
+
+                            const livePill = document.getElementById('db-live-status-pill');
+                            if (livePill) {
+                                livePill.innerHTML = '<i class="fa-solid fa-database text-success me-1"></i> MySQL Live: ' + kpis.total_products + ' สินค้า · ' + kpis.total_orders + ' ออร์เดอร์';
+                            }
+                        }
+
+                        // Update Recent Orders table with real DB orders
+                        if (statsJson.data.recent_orders && statsJson.data.recent_orders.length > 0) {
+                            const tbody = document.getElementById('dashboard-recent-orders');
+                            if (tbody) {
+                                tbody.innerHTML = statsJson.data.recent_orders.map(o => `
+                                    <tr>
+                                        <td class="fw-bold font-monospace">#ORD-${o.order_id}</td>
+                                        <td>${o.customer}</td>
+                                        <td>${o.date}</td>
+                                        <td><span class="badge bg-success-subtle text-success">${o.status}</span></td>
+                                        <td><button class="btn btn-sm btn-light border py-0 px-2" onclick="viewOrderDetail(${o.order_id})"><i class="fa-solid fa-eye"></i></button></td>
+                                    </tr>
+                                `).join('');
+                            }
+                        }
+                    }
+                }
+
+                // 2. Fetch Real Products (tb_products, 79 rows)
                 const prodRes = await fetch('api/index.php?route=products&limit=100');
                 if (prodRes.ok) {
                     const prodJson = await prodRes.json();
                     if (prodJson.data && Array.isArray(prodJson.data) && prodJson.data.length > 0) {
                         mockProducts = prodJson.data.map(p => ({
-                            id: parseInt(p.i_ProductID || p.id),
+                            id: p.i_ProductID || p.id,
                             name: p.c_ProductName || p.name,
                             category: p.c_CategoryName || p.category || 'General',
-                            supplier: p.c_SupplierName || p.supplier || 'Exotic Liquids',
-                            unit: p.c_Unit || p.unit || 'Unit',
-                            price: parseFloat(p.i_Price || p.price || 0),
-                            stock: p.stock !== undefined ? p.stock : 25,
-                            discontinued: p.status === 'ไม่ใช้งาน'
+                            supplier: p.c_SupplierName || p.supplier || 'Supplier Ltd.',
+                            unit: p.c_Unit || p.unit || 'Pack',
+                            price: parseFloat(p.i_Price || p.price) || 0,
+                            stock: 25,
+                            discontinued: false
                         }));
-                        const kpiProd = document.getElementById('kpi-products-count');
-                        if (kpiProd) kpiProd.innerText = (prodJson.total || mockProducts.length) + ' รายการ';
                         renderProductsTable();
-                        renderCategoryFilter();
                     }
                 }
 
-                // 2. Fetch Real Categories (tb_categories, 9 rows)
+                // 3. Fetch Real Categories (tb_categories, 9 rows)
                 const catRes = await fetch('api/index.php?route=categories');
                 if (catRes.ok) {
                     const catJson = await catRes.json();
                     if (catJson.data && Array.isArray(catJson.data) && catJson.data.length > 0) {
                         mockCategories = catJson.data.map(c => ({
-                            id: parseInt(c.i_CategoryID || c.id),
+                            id: c.i_CategoryID || c.id,
                             name: c.c_CategoryName || c.name,
-                            desc: c.c_Description || c.desc || 'หมวดหมู่สินค้า',
-                            count: parseInt(c.product_count || c.count || 0),
-                            icon: 'fa-tags',
-                            color: '#2563eb'
+                            count: c.product_count || 10,
+                            icon: c.icon || '📦',
+                            desc: c.c_Description || ''
                         }));
                         renderCategories();
                     }
                 }
 
-                // 3. Fetch Real Orders (tb_orders, 196 rows)
-                const ordRes = await fetch('api/index.php?route=orders&limit=100');
+                // 4. Fetch Real Orders (tb_orders, 196 rows)
+                const ordRes = await fetch('api/index.php?route=orders&limit=50');
                 if (ordRes.ok) {
                     const ordJson = await ordRes.json();
                     if (ordJson.data && Array.isArray(ordJson.data) && ordJson.data.length > 0) {
                         mockOrders = ordJson.data.map(o => ({
-                            id: String(o.i_OrderID || o.id),
-                            customer: o.customer_name || o.c_customername || o.customer || 'ลูกค้าทั่วไป',
-                            employee: o.employee_name || 'พนักงาน Northwind',
-                            date: o.c_OrderDate || o.date || '2024-01-01',
+                            id: o.i_OrderID || o.id,
+                            customer: o.customer_name || o.customer || 'Customer',
+                            employee: o.employee_name || 'Staff',
+                            date: o.c_OrderDate || o.date || '1997-01-01',
                             shipper: o.shipper_name || 'Speedy Express',
                             total: parseFloat(o.total_amount || 440.00),
                             status: o.status || 'จัดส่งแล้ว'
@@ -4108,8 +4013,9 @@ Body:
             }
         }
 
-        // --- DOM Ready Bootstrapping ---
         window.addEventListener('DOMContentLoaded', () => {
+            // Always trigger live database data sync
+            loadLiveDatabaseData();
             // Restore saved theme
             const savedTheme = localStorage.getItem('northwind_theme') || 'light';
             document.documentElement.setAttribute('data-bs-theme', savedTheme);
@@ -4136,9 +4042,6 @@ Body:
                 if (portalEl) portalEl.classList.remove('d-none');
                 if (appEl) appEl.classList.add('d-none');
             }
-
-            // Always trigger live database data sync
-            loadLiveDatabaseData();
         });
 
     </script>
