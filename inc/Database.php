@@ -168,6 +168,30 @@ class Database {
                             'status' => 'connected'
                         ]);
                         return;
+                    } else {
+                        // หากเชื่อมต่อ MySQL ได้แล้วแต่ยังไม่มีตาราง -> ทำ Auto-Import dbNorthwind.sql ทันที
+                        $sqlFile = dirname(__DIR__) . '/dbNorthwind.sql';
+                        if (!file_exists($sqlFile)) $sqlFile = __DIR__ . '/../dbNorthwind.sql';
+                        if (file_exists($sqlFile)) {
+                            try {
+                                $sqlContent = file_get_contents($sqlFile);
+                                // ลบ CREATE DATABASE และ USE ออก เพื่อให้ทำงานใน Database ของ Railway ได้โดยตรง
+                                $sqlContent = preg_replace('/CREATE\s+DATABASE[^;]+;/i', '', $sqlContent);
+                                $sqlContent = preg_replace('/USE\s+[^;]+;/i', '', $sqlContent);
+                                $testConn->exec($sqlContent);
+
+                                $this->conn = $testConn;
+                                $this->connectedConfig = array_merge($cfg, [
+                                    'engine'        => 'MySQL',
+                                    'driver'        => 'pdo_mysql',
+                                    'status'        => 'connected',
+                                    'auto_imported' => true
+                                ]);
+                                return;
+                            } catch (Exception $e) {
+                                $this->lastError = 'Auto-import failed: ' . $e->getMessage();
+                            }
+                        }
                     }
                 } catch (PDOException $e) {
                     $this->lastError = $e->getMessage();

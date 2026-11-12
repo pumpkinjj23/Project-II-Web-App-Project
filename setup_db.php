@@ -22,9 +22,11 @@ if (isset($_POST['action']) && $_POST['action'] === 'import') {
         if (file_exists($sqlFile)) {
             try {
                 $sqlContent = file_get_contents($sqlFile);
-                // แยก query ตาม semicolon
+                // ลบ CREATE DATABASE และ USE ออก เพื่อให้ทำงานใน Database ของโฮสต์/Railway ได้โดยตรง
+                $sqlContent = preg_replace('/CREATE\s+DATABASE[^;]+;/i', '', $sqlContent);
+                $sqlContent = preg_replace('/USE\s+[^;]+;/i', '', $sqlContent);
                 $conn->exec($sqlContent);
-                $message = "นำเข้าฐานข้อมูลสำเร็จเรียบร้อยแล้ว!";
+                $message = "นำเข้าฐานข้อมูล 8 ตารางหลักสำเร็จเรียบร้อยแล้ว!";
                 $messageType = "success";
             } catch (Exception $e) {
                 $message = "เกิดข้อผิดพลาดในการนำเข้า: " . $e->getMessage();
@@ -156,6 +158,17 @@ if (isset($_POST['action']) && $_POST['action'] === 'import') {
                     <input type="hidden" name="action" value="import">
                     <button type="submit" class="btn btn-warning fw-bold">📥 นำเข้าไฟล์ dbNorthwind.sql</button>
                 </form>
+            </div>
+
+            <div class="mt-4 p-4 rounded-4 bg-primary bg-opacity-10 border border-primary border-opacity-25">
+                <h5 class="fw-bold text-info mb-2">☁️ วิธีเพิ่มฐานข้อมูล MySQL บน Railway ให้ได้การ์ดขึ้นมาคู่กันใน Dashboard:</h5>
+                <ol class="mb-0 text-light small ps-3" style="line-height: 1.8;">
+                    <li>เปิดหน้าแดชบอร์ดโปรเจกต์ <strong>Railway</strong> ของคุณ</li>
+                    <li>กดปุ่ม <span class="badge bg-primary">+ Create</span> หรือ <span class="badge bg-primary">+ New</span> (หรือคลิกขวาที่พื้นที่ว่างบน Canvas)</li>
+                    <li>เลือกเมนู <strong>Database</strong> ➔ คลิกเลือก <strong>Add MySQL</strong> (ระบบจะสร้างการ์ด MySQL ขึ้นมาคู่กับเว็บแอปพลิเคชันทันที)</li>
+                    <li>คลิกที่การ์ดเว็บ <strong>Project-II-Web-App-Project</strong> ➔ ไปที่แท็บ <strong>Variables</strong> ➔ กด <strong>+ New Variable</strong> ➔ เลือก <strong>Add Reference</strong> ➔ เลือกตัวแปรของ <strong>MySQL</strong></li>
+                    <li>เมื่อเชื่อมต่อแล้ว ระบบจะ Auto-Import ข้อมูลทั้ง 8 ตารางให้อัตโนมัติ 100% ทันที!</li>
+                </ol>
             </div>
         <?php else: ?>
             <div class="alert alert-warning">
