@@ -1390,13 +1390,21 @@
                 <!-- SCREEN 07: ORDER DETAIL -->
                 <div id="view-order-detail" class="view-tab d-none">
                     <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-transparent py-3 d-flex justify-content-between align-items-center border-bottom">
-                            <div>
-                                <h5 class="m-0 fw-bold"><i class="fa-solid fa-receipt text-primary me-2"></i> รายละเอียดคำสั่งซื้อ <span id="detail-order-id">#ORD-10248</span></h5>
-                                <span class="small text-muted">ข้อมูลลูกค้า, พนักงานผู้รับผิดชอบ และรายการสินค้าในออเดอร์</span>
+                        <div class="card-header bg-transparent py-3 d-flex flex-wrap justify-content-between align-items-center gap-2 border-bottom">
+                            <div class="d-flex align-items-center flex-wrap gap-3">
+                                <div>
+                                    <h5 class="m-0 fw-bold"><i class="fa-solid fa-receipt text-primary me-2"></i> รายละเอียดคำสั่งซื้อ <span id="detail-order-id">#ORD-10248</span></h5>
+                                    <span class="small text-muted">ข้อมูลลูกค้า, พนักงานผู้รับผิดชอบ และรายการสินค้าในออเดอร์</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="small text-muted text-nowrap fw-semibold"><i class="fa-solid fa-arrow-right-arrow-left text-primary me-1"></i> เลือกดูออเดอร์อื่น:</span>
+                                    <select id="detail-order-selector" class="form-select form-select-sm" style="min-width: 260px;" onchange="viewOrderDetail(this.value)">
+                                        <option value="10248">#ORD-10248 - กำลังโหลดข้อมูล...</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="d-flex gap-2">
-                                <button class="btn btn-sm btn-outline-success btn-rounded" onclick="openOrderQRModal('10248')"><i class="fa-solid fa-qrcode me-1"></i> QR ใบเสร็จดิจิทัล</button>
+                                <button class="btn btn-sm btn-outline-success btn-rounded" onclick="openCurrentOrderQR()"><i class="fa-solid fa-qrcode me-1"></i> QR ใบเสร็จดิจิทัล</button>
                                 <button class="btn btn-sm btn-outline-secondary btn-rounded" onclick="window.print()"><i class="fa-solid fa-print me-1"></i> พิมพ์ใบสั่งซื้อ</button>
                                 <button class="btn btn-sm btn-primary btn-rounded" onclick="switchTab('orders')">← กลับรายการออเดอร์</button>
                             </div>
@@ -3114,26 +3122,31 @@
         }
 
         // 5. Orders Management
+        let currentViewingOrderId = 10248;
+
         function renderOrdersTable() {
             const tbody = document.getElementById('orders-table-body');
             const dashTbody = document.getElementById('dashboard-recent-orders');
             if (tbody) tbody.innerHTML = '';
             if (dashTbody) dashTbody.innerHTML = '';
 
-            const search = (document.getElementById('order-search')?.value || '').toLowerCase();
+            const search = (document.getElementById('order-search')?.value || '').toLowerCase().trim();
             const status = document.getElementById('order-status-filter')?.value || '';
 
             const filtered = mockOrders.filter(o => {
-                const matchQuery = o.id.includes(search) || o.customer.toLowerCase().includes(search);
-                const matchStatus = status === '' || o.status.toLowerCase() === status.toLowerCase();
+                const idStr = String(o.id || '');
+                const custStr = String(o.customer || '').toLowerCase();
+                const matchQuery = !search || idStr.includes(search) || custStr.includes(search);
+                const matchStatus = !status || String(o.status || '').toLowerCase() === status.toLowerCase();
                 return matchQuery && matchStatus;
             });
 
             filtered.forEach(o => {
                 let badgeClass = 'bg-secondary-subtle text-secondary';
-                if (o.status === 'Shipped') badgeClass = 'bg-success-subtle text-success border border-success-subtle';
-                if (o.status === 'Processing') badgeClass = 'bg-warning-subtle text-warning border border-warning-subtle';
-                if (o.status === 'Pending') badgeClass = 'bg-info-subtle text-info border border-info-subtle';
+                const st = String(o.status || '').toLowerCase();
+                if (st.includes('จัดส่ง') || st.includes('shipped')) badgeClass = 'bg-success-subtle text-success border border-success-subtle';
+                else if (st.includes('ดำเนิน') || st.includes('processing')) badgeClass = 'bg-warning-subtle text-warning border border-warning-subtle';
+                else if (st.includes('ยกเลิก') || st.includes('cancel')) badgeClass = 'bg-danger-subtle text-danger border border-danger-subtle';
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -3142,10 +3155,10 @@
                     <td>${o.employee}</td>
                     <td>${o.date}</td>
                     <td><span class="small text-muted"><i class="fa-solid fa-truck me-1"></i>${o.shipper}</span></td>
-                    <td class="fw-bold text-success">$${o.total.toFixed(2)}</td>
+                    <td class="fw-bold text-success">${parseFloat(o.total || 0).toFixed(2)}</td>
                     <td><span class="badge ${badgeClass} rounded-pill">${o.status}</span></td>
                     <td class="text-end">
-                        <button class="btn btn-sm btn-outline-primary btn-rounded" onclick="viewOrderDetail('${o.id}')"><i class="fa-solid fa-eye me-1"></i> รายละเอียด</button>
+                        <button class="btn btn-sm btn-outline-primary btn-rounded" onclick="viewOrderDetail(${o.id})"><i class="fa-solid fa-eye me-1"></i> รายละเอียด</button>
                     </td>
                 `;
 
@@ -3162,17 +3175,89 @@
             renderOrdersTable();
         }
 
-        function viewOrderDetail(orderId) {
-            const order = mockOrders.find(o => o.id === orderId) || mockOrders[0];
-            document.getElementById('detail-order-id').innerText = `#ORD-${order.id}`;
-            document.getElementById('detail-customer-name').innerText = order.customer;
-            document.getElementById('detail-employee-name').innerText = order.employee;
-            document.getElementById('detail-order-date').innerText = order.date;
-            document.getElementById('detail-shipper-name').innerText = order.shipper;
-            document.getElementById('detail-status-badge').innerText = order.status;
-            document.getElementById('detail-grand-total').innerText = `$${order.total.toFixed(2)}`;
+        function populateOrderSelector() {
+            const selector = document.getElementById('detail-order-selector');
+            if (!selector || !mockOrders || mockOrders.length === 0) return;
+            selector.innerHTML = mockOrders.map(o => `
+                <option value="${o.id}">#ORD-${o.id} - ${o.customer} (${parseFloat(o.total || 0).toFixed(2)})</option>
+            `).join('');
+            if (currentViewingOrderId) {
+                selector.value = currentViewingOrderId;
+            }
+        }
 
+        async function viewOrderDetail(orderId) {
+            if (!orderId && mockOrders.length > 0) {
+                orderId = mockOrders[0].id;
+            }
+            orderId = parseInt(orderId) || 10248;
+            currentViewingOrderId = orderId;
+
+            // Sync selector dropdown
+            const selector = document.getElementById('detail-order-selector');
+            if (selector) selector.value = orderId;
+
+            // Set basic summary from mockOrders first
+            const summary = mockOrders.find(o => parseInt(o.id) === orderId) || mockOrders[0] || {};
+            document.getElementById('detail-order-id').innerText = `#ORD-${orderId}`;
+            if (document.getElementById('detail-customer-name')) document.getElementById('detail-customer-name').innerText = summary.customer || 'Loading...';
+            if (document.getElementById('detail-employee-name')) document.getElementById('detail-employee-name').innerText = summary.employee || 'Loading...';
+            if (document.getElementById('detail-order-date')) document.getElementById('detail-order-date').innerText = summary.date || '';
+            if (document.getElementById('detail-shipper-name')) document.getElementById('detail-shipper-name').innerText = summary.shipper || '';
+            if (document.getElementById('detail-status-badge')) document.getElementById('detail-status-badge').innerText = summary.status || 'จัดส่งแล้ว';
+            if (document.getElementById('detail-grand-total')) document.getElementById('detail-grand-total').innerText = `${parseFloat(summary.total || 0).toFixed(2)}`;
+
+            // Switch to Order Detail view
             switchTab('order-detail');
+
+            // Set items table to loading state
+            const tbody = document.getElementById('detail-items-body');
+            if (tbody) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted"><i class="fa-solid fa-spinner fa-spin me-2 text-primary"></i> กำลังโหลดรายการสินค้าในออเดอร์ #' + orderId + ' จากฐานข้อมูล...</td></tr>';
+            }
+
+            // Fetch live order detail and order items from RESTful API
+            try {
+                const res = await fetch(`api/index.php?route=orders/${orderId}`);
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json.status && json.data) {
+                        const d = json.data;
+                        if (d.c_customername) document.getElementById('detail-customer-name').innerText = d.c_customername;
+                        if (d.c_address) document.getElementById('detail-customer-address').innerText = d.c_address + (d.c_city ? ', ' + d.c_city : '');
+                        if (d.c_country) document.getElementById('detail-customer-country').innerText = d.c_country;
+                        if (d.employee_name) document.getElementById('detail-employee-name').innerText = d.employee_name;
+                        if (d.c_OrderDate) document.getElementById('detail-order-date').innerText = d.c_OrderDate;
+                        if (d.c_ShipperName) document.getElementById('detail-shipper-name').innerText = d.c_ShipperName;
+                        if (d.status) document.getElementById('detail-status-badge').innerText = d.status;
+                        if (d.grand_total) document.getElementById('detail-grand-total').innerText = `${parseFloat(d.grand_total).toFixed(2)}`;
+
+                        // Render live items from tb_orderdetails
+                        if (tbody && Array.isArray(d.items) && d.items.length > 0) {
+                            tbody.innerHTML = d.items.map(item => `
+                                <tr>
+                                    <td>
+                                        <strong class="text-primary">${item.c_ProductName || 'สินค้า #' + item.i_ProductID}</strong>
+                                        <div class="small text-muted">${item.c_Unit || ''}</div>
+                                    </td>
+                                    <td class="text-end">${parseFloat(item.i_Price || 0).toFixed(2)}</td>
+                                    <td class="text-center fw-bold">${item.i_Quantity}</td>
+                                    <td class="text-end text-muted">0%</td>
+                                    <td class="text-end fw-bold text-success">${parseFloat(item.line_total || (item.i_Price * item.i_Quantity)).toFixed(2)}</td>
+                                </tr>
+                            `).join('');
+                        } else if (tbody) {
+                            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-muted">ไม่มีรายการสินค้าในคำสั่งซื้อนี้</td></tr>';
+                        }
+                    }
+                }
+            } catch(e) {
+                console.warn('Live order detail fetch error:', e);
+            }
+        }
+
+        function openCurrentOrderQR() {
+            openOrderQRModal(currentViewingOrderId || 10248);
         }
 
         // 6. Customers, Suppliers, Employees
@@ -4049,7 +4134,7 @@
                 }
 
                 // 4. Fetch Real Orders (tb_orders, 196 rows)
-                const ordRes = await fetch('api/index.php?route=orders&limit=50');
+                const ordRes = await fetch('api/index.php?route=orders&limit=250');
                 if (ordRes.ok) {
                     const ordJson = await ordRes.json();
                     if (ordJson.data && Array.isArray(ordJson.data) && ordJson.data.length > 0) {
@@ -4065,6 +4150,7 @@
                         const kpiOrd = document.getElementById('kpi-orders-count');
                         if (kpiOrd) kpiOrd.innerText = (ordJson.total || mockOrders.length) + ' รายการ';
                         renderOrdersTable();
+                        populateOrderSelector();
                     }
                 }
 
