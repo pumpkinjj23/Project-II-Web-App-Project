@@ -3020,8 +3020,8 @@
             });
         }
 
-        function openCategoryModal() {
-            Swal.fire({
+        async function openCategoryModal() {
+            const { value: formValues } = await Swal.fire({
                 title: 'เพิ่มหมวดหมู่สินค้าใหม่',
                 html: `
                     <div class="text-start mb-2"><label class="small fw-semibold">ชื่อหมวดหมู่ (Category Name):</label><input id="swal-cat-name" class="form-control" placeholder="เช่น Beverage, Dairy"></div>
@@ -3033,17 +3033,28 @@
                 preConfirm: () => {
                     const name = document.getElementById('swal-cat-name').value.trim();
                     const desc = document.getElementById('swal-cat-desc').value.trim();
-                    if (!name) Swal.showValidationMessage('กรุณากรอกชื่อหมวดหมู่');
+                    if (!name) { Swal.showValidationMessage('กรุณากรอกชื่อหมวดหมู่'); return false; }
                     return { name, desc };
                 }
-            }).then((res) => {
-                if (res.isConfirmed) {
+            });
+
+            if (formValues) {
+                try {
+                    const res = await fetch('api/index.php?route=categories', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ c_CategoryName: formValues.name, c_Description: formValues.desc })
+                    });
+                    const json = await res.json();
+                    await loadLiveDatabaseData();
+                    Swal.fire({ icon: 'success', title: 'เพิ่มหมวดหมู่สำเร็จ', text: json.message || 'บันทึกลงฐานข้อมูลเรียบร้อย', timer: 1500, showConfirmButton: false });
+                } catch(e) {
                     const newId = mockCategories.length + 1;
-                    mockCategories.push({ id: newId, name: res.value.name, desc: res.value.desc, count: 0, icon: 'fa-tag', color: '#2563eb' });
+                    mockCategories.push({ id: newId, name: formValues.name, desc: formValues.desc, count: 0, icon: '📦' });
                     renderCategories();
                     Swal.fire({ icon: 'success', title: 'เพิ่มหมวดหมู่สำเร็จ', timer: 1200, showConfirmButton: false });
                 }
-            });
+            }
         }
 
         function editCategory(id) {
@@ -3075,21 +3086,31 @@
             });
         }
 
-        function deleteCategory(id) {
-            Swal.fire({
+        async function deleteCategory(id) {
+            const res = await Swal.fire({
                 title: 'ยืนยันการลบหมวดหมู่?',
                 text: 'การลบหมวดหมู่อาจส่งผลต่อการเชื่อมโยงสินค้าในคลัง',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444',
                 confirmButtonText: 'ลบข้อมูล'
-            }).then((res) => {
-                if (res.isConfirmed) {
+            });
+
+            if (res.isConfirmed) {
+                try {
+                    await fetch(`api/index.php?route=categories/${id}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ _method: 'DELETE' })
+                    });
+                    await loadLiveDatabaseData();
+                    Swal.fire({ icon: 'success', title: 'ลบข้อมูลแล้ว', timer: 1200, showConfirmButton: false });
+                } catch(e) {
                     mockCategories = mockCategories.filter(c => c.id !== id);
                     renderCategories();
                     Swal.fire({ icon: 'success', title: 'ลบข้อมูลแล้ว', timer: 1200, showConfirmButton: false });
                 }
-            });
+            }
         }
 
         // 5. Orders Management
@@ -3187,8 +3208,8 @@
             });
         }
 
-        function openCustomerModal() {
-            Swal.fire({
+        async function openCustomerModal() {
+            const { value: formValues } = await Swal.fire({
                 title: 'เพิ่มลูกค้าใหม่',
                 html: `
                     <div class="text-start mb-2"><label class="small fw-semibold">รหัสลูกค้า (5 ตัวอักษร):</label><input id="swal-cust-id" class="form-control" maxlength="5" placeholder="เช่น NEWCO"></div>
@@ -3197,18 +3218,41 @@
                     <div class="text-start"><label class="small fw-semibold">ประเทศ:</label><input id="swal-cust-country" class="form-control" placeholder="Thailand"></div>
                 `,
                 showCancelButton: true,
-                confirmButtonText: 'บันทึก'
-            }).then((res) => {
-                if (res.isConfirmed) {
-                    const id = document.getElementById('swal-cust-id').value.toUpperCase() || 'CUST' + (mockCustomers.length + 1);
-                    const company = document.getElementById('swal-cust-company').value || 'New Company Ltd.';
-                    const contact = document.getElementById('swal-cust-contact').value || 'John Doe';
-                    const country = document.getElementById('swal-cust-country').value || 'Thailand';
-                    mockCustomers.unshift({ id, company, contact, country, phone: '02-555-1234' });
+                confirmButtonText: 'บันทึก',
+                cancelButtonText: 'ยกเลิก',
+                preConfirm: () => {
+                    const id = document.getElementById('swal-cust-id').value.toUpperCase().trim() || 'CUST' + (mockCustomers.length + 1);
+                    const company = document.getElementById('swal-cust-company').value.trim() || 'New Company Ltd.';
+                    const contact = document.getElementById('swal-cust-contact').value.trim() || 'John Doe';
+                    const country = document.getElementById('swal-cust-country').value.trim() || 'Thailand';
+                    return { id, company, contact, country };
+                }
+            });
+
+            if (formValues) {
+                try {
+                    const res = await fetch('api/index.php?route=customers', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            c_customerid: formValues.id,
+                            c_customername: formValues.company,
+                            c_contactname: formValues.contact,
+                            c_country: formValues.country,
+                            c_address: 'Bangkok, Thailand',
+                            c_city: 'Bangkok',
+                            c_postalcode: '10110'
+                        })
+                    });
+                    const json = await res.json();
+                    await loadLiveDatabaseData();
+                    Swal.fire({ icon: 'success', title: 'เพิ่มลูกค้าสำเร็จ', text: json.message || 'บันทึกลงฐานข้อมูลเรียบร้อย', timer: 1500, showConfirmButton: false });
+                } catch(e) {
+                    mockCustomers.unshift({ id: formValues.id, company: formValues.company, contact: formValues.contact, country: formValues.country, phone: '02-555-1234' });
                     renderCustomersTable();
                     Swal.fire({ icon: 'success', title: 'เพิ่มลูกค้าสำเร็จ', timer: 1200, showConfirmButton: false });
                 }
-            });
+            }
         }
 
         function renderSuppliersTable() {
