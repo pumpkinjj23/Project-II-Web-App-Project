@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsQR for Real-Time Camera QR & Barcode Scanning -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
     <style>
         :root {
@@ -3131,13 +3133,18 @@
 
             // Sync selector dropdown
             const selector = document.getElementById('detail-order-selector');
-            if (selector) selector.value = orderId;
+            if (selector) {
+                if (!selector.querySelector(`option[value="${orderId}"]`)) {
+                    selector.insertAdjacentHTML('afterbegin', `<option value="${orderId}">#ORD-${orderId} (คำสั่งซื้อที่เปิดดู)</option>`);
+                }
+                selector.value = orderId;
+            }
 
             // Set basic summary from mockOrders first
             const summary = mockOrders.find(o => parseInt(o.id) === orderId) || mockOrders[0] || {};
             document.getElementById('detail-order-id').innerText = `#ORD-${orderId}`;
-            if (document.getElementById('detail-customer-name')) document.getElementById('detail-customer-name').innerText = summary.customer || 'Loading...';
-            if (document.getElementById('detail-employee-name')) document.getElementById('detail-employee-name').innerText = summary.employee || 'Loading...';
+            if (document.getElementById('detail-customer-name')) document.getElementById('detail-customer-name').innerText = summary.customer || 'กำลังโหลด...';
+            if (document.getElementById('detail-employee-name')) document.getElementById('detail-employee-name').innerText = summary.employee || 'กำลังโหลด...';
             if (document.getElementById('detail-order-date')) document.getElementById('detail-order-date').innerText = summary.date || '';
             if (document.getElementById('detail-shipper-name')) document.getElementById('detail-shipper-name').innerText = summary.shipper || '';
             if (document.getElementById('detail-status-badge')) document.getElementById('detail-status-badge').innerText = summary.status || 'จัดส่งแล้ว';
@@ -3145,6 +3152,7 @@
 
             // Switch to Order Detail view
             switchTab('order-detail');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
             // Set items table to loading state
             const tbody = document.getElementById('detail-items-body');
@@ -3783,8 +3791,41 @@
         // Open QR Code Viewer Modal
         function openQRCodeModal(customUrl) {
             let targetUrl = customUrl;
+            const base = window.location.href.split('#')[0].split('?')[0];
+
             if (!targetUrl) {
-                targetUrl = window.location.href;
+                const activeTab = currentTab || 'dashboard';
+                if (activeTab === 'order-detail') {
+                    const ordId = currentViewingOrderId || 10248;
+                    targetUrl = `${base}?view=order-detail&order=${ordId}#order-${ordId}`;
+                    setTimeout(() => {
+                        const orderTabBtn = document.querySelector('#qrTargetTabs button[onclick*="order"]');
+                        if (orderTabBtn) {
+                            document.querySelectorAll('#qrTargetTabs .nav-link').forEach(l => l.classList.remove('active'));
+                            orderTabBtn.classList.add('active');
+                        }
+                    }, 50);
+                } else if (activeTab === 'products') {
+                    targetUrl = `${base}?view=products#products`;
+                    setTimeout(() => {
+                        const prodTabBtn = document.querySelector('#qrTargetTabs button[onclick*="products"]');
+                        if (prodTabBtn) {
+                            document.querySelectorAll('#qrTargetTabs .nav-link').forEach(l => l.classList.remove('active'));
+                            prodTabBtn.classList.add('active');
+                        }
+                    }, 50);
+                } else if (activeTab === 'dashboard') {
+                    targetUrl = `${base}?view=dashboard#dashboard`;
+                    setTimeout(() => {
+                        const dashTabBtn = document.querySelector('#qrTargetTabs button[onclick*="dashboard"]');
+                        if (dashTabBtn) {
+                            document.querySelectorAll('#qrTargetTabs .nav-link').forEach(l => l.classList.remove('active'));
+                            dashTabBtn.classList.add('active');
+                        }
+                    }, 50);
+                } else {
+                    targetUrl = base;
+                }
             }
 
             const imgEl = document.getElementById('qr-modal-image');
@@ -3812,14 +3853,17 @@
                 element.classList.add('active');
             }
 
-            const base = window.location.href.split('#')[0];
+            const base = window.location.href.split('#')[0].split('?')[0];
             let url = base;
-            if (type === 'dashboard') {
-                url = base + '#dashboard';
+            if (type === 'home' || type === 'main') {
+                url = base;
+            } else if (type === 'dashboard') {
+                url = `${base}?view=dashboard#dashboard`;
             } else if (type === 'products') {
-                url = base + '#products';
+                url = `${base}?view=products#products`;
             } else if (type === 'order') {
-                url = base + '#order-10248';
+                const ordId = currentViewingOrderId || (mockOrders && mockOrders.length > 0 ? mockOrders[0].id : 10248);
+                url = `${base}?view=order-detail&order=${ordId}#order-${ordId}`;
             }
 
             const imgEl = document.getElementById('qr-modal-image');
@@ -3857,8 +3901,99 @@
         }
 
         function openOrderQRModal(orderId) {
-            const verifyUrl = window.location.href.split('#')[0] + '#order-' + orderId;
+            orderId = orderId || currentViewingOrderId || 10248;
+            const base = window.location.href.split('#')[0].split('?')[0];
+            const verifyUrl = `${base}?view=order-detail&order=${orderId}#order-${orderId}`;
             openQRCodeModal(verifyUrl);
+
+            setTimeout(() => {
+                const orderTabBtn = document.querySelector('#qrTargetTabs button[onclick*="order"]');
+                if (orderTabBtn) {
+                    document.querySelectorAll('#qrTargetTabs .nav-link').forEach(l => l.classList.remove('active'));
+                    orderTabBtn.classList.add('active');
+                }
+            }, 60);
+        }
+
+        // Real-Time Camera Scanner Functions
+        let qrScanInterval = null;
+
+        function startCameraQRScanner() {
+            if (qrScanInterval) clearInterval(qrScanInterval);
+            const video = document.getElementById('live-scanner-video');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+            qrScanInterval = setInterval(() => {
+                if (!currentCameraStream || !video || video.readyState !== video.HAVE_ENOUGH_DATA) return;
+
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                try {
+                    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    if (window.jsQR) {
+                        const code = jsQR(imgData.data, imgData.width, imgData.height, {
+                            inversionAttempts: 'dontInvert'
+                        });
+                        if (code && code.data && code.data.trim().length > 0) {
+                            handleScannedQRContent(code.data.trim());
+                        }
+                    }
+                } catch(err) {
+                    // Ignore transient frame errors
+                }
+            }, 250);
+        }
+
+        function stopCameraQRScanner() {
+            if (qrScanInterval) {
+                clearInterval(qrScanInterval);
+                qrScanInterval = null;
+            }
+        }
+
+        function handleScannedQRContent(content) {
+            playScanBeep();
+            stopCameraStream();
+
+            const modalEl = document.getElementById('cameraScanModal');
+            if (modalEl) {
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+            }
+
+            // 1. Check if Order URL or Order ID
+            const ordMatch = content.match(/(?:order[=-]|order_id=|#ORD-?|#order-)(\d+)/i) || content.match(/^10\d{3}$/);
+            if (ordMatch) {
+                const orderId = parseInt(ordMatch[1] || ordMatch[0]);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'สแกนพบคำสั่งซื้อจริง!',
+                    text: `พบคำสั่งซื้อ #ORD-${orderId} กำลังดึงข้อมูลจาก MySQL...`,
+                    timer: 1600,
+                    showConfirmButton: false
+                });
+                viewOrderDetail(orderId);
+                return;
+            }
+
+            // 2. Check if Product URL or Product ID
+            const prodMatch = content.match(/(?:product[=-]|product_id=|#product-)(\d+)/i);
+            if (prodMatch) {
+                const pId = parseInt(prodMatch[1]);
+                editProduct(pId);
+                return;
+            }
+
+            // 3. Fallback
+            Swal.fire({
+                icon: 'info',
+                title: 'สแกนพบข้อความ QR Code',
+                text: content,
+                confirmButtonText: 'ตกลง'
+            });
         }
 
         // Camera Scanner Modal Functions
@@ -3888,9 +4023,12 @@
                         if (video) {
                             video.srcObject = stream;
                             video.style.display = 'block';
+                            video.setAttribute('playsinline', true);
+                            video.play();
                         }
                         if (placeholder) placeholder.style.display = 'none';
                         if (btn) btn.innerHTML = '<i class="fa-solid fa-video-slash me-1"></i> ปิดกล้อง (Stop Camera)';
+                        startCameraQRScanner();
                     })
                     .catch(err => {
                         Swal.fire({
@@ -3911,6 +4049,7 @@
         }
 
         function stopCameraStream() {
+            stopCameraQRScanner();
             if (currentCameraStream) {
                 currentCameraStream.getTracks().forEach(track => track.stop());
                 currentCameraStream = null;
@@ -4145,6 +4284,65 @@
             }
         }
 
+        // Auto Route Deep Link (QR Code Scan & Shared Invoices)
+        async function handleDeepLinkRoute() {
+            try {
+                const urlObj = new URL(window.location.href);
+                const params = urlObj.searchParams;
+                const hash = window.location.hash || '';
+
+                const orderParam = params.get('order') || params.get('order_id') || params.get('id');
+                const viewParam = params.get('view') || params.get('tab') || params.get('screen');
+
+                let targetOrder = null;
+                let targetTab = null;
+
+                if (orderParam) {
+                    targetOrder = parseInt(orderParam);
+                } else if (hash.match(/^#order[-/](\d+)/i)) {
+                    targetOrder = parseInt(hash.match(/^#order[-/](\d+)/i)[1]);
+                } else if (hash === '#order-detail' || hash === '#orders') {
+                    targetTab = hash.replace('#', '');
+                } else if (hash.match(/^#([a-z0-9\-]+)/i)) {
+                    targetTab = hash.match(/^#([a-z0-9\-]+)/i)[1];
+                }
+
+                if (viewParam && !targetOrder) {
+                    targetTab = viewParam;
+                }
+
+                // If arriving via QR scan or deep link:
+                // Auto authenticate as Mobile Guest / Authorized Viewer so the phone is never blocked by login!
+                if (targetOrder || targetTab) {
+                    localStorage.setItem('northwind_auth', 'true');
+                    const portalEl = document.getElementById('login-portal');
+                    const appEl = document.getElementById('app-wrapper');
+                    if (portalEl) portalEl.classList.add('d-none');
+                    if (appEl) appEl.classList.remove('d-none');
+                }
+
+                if (targetOrder) {
+                    // Open the specific order detail and fetch live from MySQL
+                    await viewOrderDetail(targetOrder);
+                    if (window.Swal) {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            title: `สแกนเปิดใบสั่งซื้อ #ORD-${targetOrder} สำเร็จ`,
+                            text: 'กำลังแสดงข้อมูลจริงจากฐานข้อมูล MySQL',
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                    }
+                } else if (targetTab) {
+                    switchTab(targetTab);
+                }
+            } catch(e) {
+                console.warn('handleDeepLinkRoute error:', e);
+            }
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             // Always trigger live database data sync
             loadLiveDatabaseData();
@@ -4159,22 +4357,34 @@
             // Load saved user profile
             loadUserProfile();
 
-            // Authentication state check
+            // Authentication state check & QR Code Deep Link Support
             const auth = localStorage.getItem('northwind_auth');
             const portalEl = document.getElementById('login-portal');
             const appEl = document.getElementById('app-wrapper');
 
-            if (auth) {
+            const hasDeepLink = (window.location.hash && window.location.hash.length > 1) || 
+                                window.location.search.includes('order') || 
+                                window.location.search.includes('view') ||
+                                window.location.search.includes('tab');
+
+            if (auth || hasDeepLink) {
                 if (portalEl) portalEl.classList.add('d-none');
                 if (appEl) appEl.classList.remove('d-none');
                 renderOrdersTable();
                 renderProductsTable();
                 initCharts();
+
+                // If opened via QR code scan, route to the target order or tab
+                if (hasDeepLink) {
+                    handleDeepLinkRoute();
+                }
             } else {
                 if (portalEl) portalEl.classList.remove('d-none');
                 if (appEl) appEl.classList.add('d-none');
             }
         });
+
+        window.addEventListener('hashchange', handleDeepLinkRoute);
 
     </script>
 </body>
