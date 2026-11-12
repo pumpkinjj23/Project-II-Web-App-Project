@@ -991,13 +991,13 @@
                     <!-- Quick Screen Switcher Button -->
                     <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#screenNavModal" title="สลับโมดูลระบบ">
                         <i class="fa-solid fa-compass"></i>
-                        <span>โมดูลระบบ</span>
+                        <span>สลับโมดูลระบบ</span>
                     </button>
 
                     <!-- QR Code Mobile Access Button -->
                     <button class="btn btn-outline-primary shadow-sm" onclick="openQRCodeModal()" title="สแกน QR Code เปิดดูระบบบนมือถือ">
                         <i class="fa-solid fa-qrcode"></i>
-                        <span class="d-none d-lg-inline">เปิดบนมือถือ</span>
+                        <span class="d-none d-lg-inline">สแกนดูผ่านมือถือ</span>
                     </button>
 
                     <!-- Camera Scanner Button -->
@@ -1012,8 +1012,8 @@
                     </button>
 
                     <!-- Live Online Badge -->
-                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill d-none d-md-inline-flex align-items-center py-2 px-3 small" style="height: 36px; white-space: nowrap;" id="db-live-status-pill">
-                        <i class="fa-solid fa-database text-success me-1"></i> MySQL Live: 79 สินค้า · 196 ออร์เดอร์
+                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill d-none d-md-inline-flex align-items-center py-2 px-3 small" style="height: 36px; white-space: nowrap;" id="db-live-status-pill" title="MySQL Live: 79 สินค้า · 196 ออร์เดอร์">
+                        <i class="fa-solid fa-circle-check text-success me-1"></i> Hosting: Live Online
                     </span>
 
                     <!-- User Profile Dropdown -->
@@ -1808,75 +1808,8 @@
                         </div>
                     </div>
                 </div>
-                        </div>
 
-                        <!-- Right Side: Dark API Doc Entry Code Box (ตรงตามสไลด์ Image 2 เป๊ะ) -->
-                        <div class="col-lg-6">
-                            <div class="card border-0 shadow-lg text-white h-100" style="background: #0f172a; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1) !important;">
-                                <div class="card-header bg-transparent border-bottom border-white border-opacity-10 py-3 px-4 d-flex justify-content-between align-items-center">
-                                    <div class="fw-bold text-white-50 small">ตัวอย่าง API Doc Entry</div>
-                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">
-                                        RESTful API Spec
-                                    </span>
-                                </div>
-                                <div class="card-body p-4 font-monospace">
-                                    <div class="mb-3">
-                                        <span class="badge bg-success me-1">GET</span> <span style="color: #60a5fa;">/api/v1/products</span>
-                                    </div>
-
-                                    <div class="text-white-50 small mb-1">Headers:</div>
-                                    <div style="color: #38bdf8;" class="small mb-3">Authorization: Bearer {token}</div>
-
-                                    <div class="text-white-50 small mb-1">Query:</div>
-                                    <div style="color: #a7f3d0;" class="small mb-3">?search=&category_id=&page=1</div>
-
-                                    <div class="text-white-50 small mb-1">Response 200:</div>
-                                    <pre class="m-0 small" style="color: #facc15; background: transparent; border: none; line-height: 1.5;">{
-  "status": true,
-  "data": [...],
-  "total": 79
-}</pre>
-
-                                    <!-- Live API Fetch Terminal -->
-                                    <div class="mt-4 pt-3 border-top border-white border-opacity-10">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="small text-white-50"><i class="fa-solid fa-cloud-arrow-down me-1"></i> ยิงทดสอบ Endpoint จริงจาก MySQL:</span>
-                                            <button type="button" class="btn btn-sm btn-primary btn-rounded px-3" onclick="testLiveApiDocFetch()">
-                                                <i class="fa-solid fa-bolt me-1"></i> ยิง GET /api/v1/products
-                                            </button>
-                                        </div>
-                                        <div id="api-doc-entry-terminal" class="p-3 rounded-3 bg-black bg-opacity-50 text-white font-monospace small" style="max-height: 160px; overflow-y: auto; font-size: 0.76rem;">
-// คลิกปุ่ม "ยิง GET /api/v1/products" เพื่อดู Response สดจากฐานข้อมูล MySQL (79 รายการ)
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bottom Documentation Links & Formats (ตามสไลด์ Image 2: รูปแบบ: Word / PDF / Postman Collection หรือ เครื่องมืออื่น ๆ เช่น Swagger) -->
-                    <div class="card border-0 shadow-sm mt-4 p-4 rounded-4 bg-body-tertiary">
-                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-                            <div>
-                                <h6 class="fw-bold mb-1">รูปแบบเอกสาร: Word / PDF / Postman Collection หรือ เครื่องมืออื่น ๆ เช่น Swagger</h6>
-                                <p class="text-muted small mb-0">เลือกเปิดดูเอกสาร API ในรูปแบบที่ต้องการ หรือนำไฟล์ไปทดสอบใน Postman</p>
-                            </div>
-                            <div class="d-flex flex-wrap gap-2">
-                                <a href="api-docs.html" target="_blank" class="btn btn-sm btn-primary btn-rounded px-3">
-                                    <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> เปิด Swagger UI เต็มรูปแบบ
-                                </a>
-                                <a href="docs/northwind_postman_collection.json" download class="btn btn-sm btn-outline-warning text-dark btn-rounded px-3">
-                                    <i class="fa-solid fa-download me-1"></i> Postman Collection (.json)
-                                </a>
-                                <a href="docs/API_DOCUMENTATION.md" target="_blank" class="btn btn-sm btn-outline-secondary btn-rounded px-3">
-                                    <i class="fa-solid fa-file-lines me-1"></i> เอกสาร Markdown (API Doc)
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-<!-- SCREEN: TECHNOLOGY STACK & ARCHITECTURE (ข้อกำหนดที่ 1 จาก 4 - ตรงตามสไลด์เป๊ะ 100%) -->
+                <!-- SCREEN: TECHNOLOGY STACK & ARCHITECTURE (ข้อกำหนดที่ 1 จาก 4 - ตรงตามสไลด์เป๊ะ 100%) -->
                 <div id="view-architecture" class="view-tab d-none">
                     <!-- Slide 1 Canvas Container with Dark Navy Canvas (เหมือนสไลด์ต้นฉบับ) -->
                     <div class="p-4 p-lg-5 rounded-4 shadow-lg text-white mb-4" style="background: #0a1128; border: 1px solid rgba(255,255,255,0.08);">
@@ -1993,43 +1926,7 @@
                     </div>
                 </div>
 
-                        <!-- Right Side: Dark Code Snippet Box (ตรงตามสไลด์ Image 1 เป๊ะ) -->
-                        <div class="col-lg-6">
-                            <div class="card border-0 shadow-lg text-white h-100" style="background: #0f172a; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1) !important;">
-                                <div class="card-header bg-transparent border-bottom border-white border-opacity-10 py-3 px-4 d-flex justify-content-between align-items-center">
-                                    <div class="fw-bold text-white-50 small">ตัวอย่าง Code ที่ถูกต้อง</div>
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
-                                        <i class="fa-solid fa-check me-1"></i> PDO · OOP · Bind Parameter
-                                    </span>
-                                </div>
-                                <div class="card-body p-4">
-                                    <pre class="m-0 font-monospace" style="color: #38bdf8; font-size: 0.92rem; line-height: 1.7; background: transparent; border: none;"><span style="color: #94a3b8;">$db = new Database();</span>
-<span style="color: #94a3b8;">$conn = $db->getConnection();</span>
-
-<span style="color: #60a5fa;">$sql = "SELECT * FROM tb_products WHERE i_productid = ?";</span>
-<span style="color: #f472b6;">$stmt = $conn->prepare($sql);</span>
-<span style="color: #34d399;">$stmt->execute([$id]);</span>
-<span style="color: #facc15;">$row = $stmt->fetch();</span></pre>
-
-                                    <!-- Live Execution Terminal -->
-                                    <div class="mt-4 pt-3 border-top border-white border-opacity-10">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="small text-white-50"><i class="fa-solid fa-terminal me-1"></i> ทดสอบรัน SQL Bind Parameter บนฐานข้อมูลจริง:</span>
-                                            <button type="button" class="btn btn-sm btn-success btn-rounded px-3" onclick="testLiveSqlSnippet()">
-                                                <i class="fa-solid fa-play me-1"></i> รัน Query จริง ($id = 1)
-                                            </button>
-                                        </div>
-                                        <div id="live-sql-snippet-output" class="p-3 rounded-3 bg-black bg-opacity-50 text-white font-monospace small d-none" style="max-height: 140px; overflow-y: auto; font-size: 0.78rem;">
-                                            // ผลลัพธ์จะปรากฏที่นี่
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </main>
+                        </main>
 
             <!-- FOOTER -->
             <footer class="bg-transparent border-top py-3 px-4 text-center text-muted small mt-auto">
