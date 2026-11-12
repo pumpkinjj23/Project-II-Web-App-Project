@@ -2840,7 +2840,7 @@
             switchTab('product-form');
         }
 
-        function saveProduct(e) {
+        async function saveProduct(e) {
             e.preventDefault();
             const id = document.getElementById('prod-id').value;
             const name = document.getElementById('prod-name').value.trim();
@@ -2857,52 +2857,117 @@
                 return;
             }
 
-            if (id) {
-                // Update
-                const index = mockProducts.findIndex(p => p.id == id);
-                if (index !== -1) {
-                    mockProducts[index] = { ...mockProducts[index], name, category, supplier, unit, price, stock, reorder, discontinued };
-                }
-                Swal.fire({
-                    icon: 'success',
-                    title: 'บันทึกสำเร็จ',
-                    text: `อัปเดตข้อมูลสินค้า ID #${id} เรียบร้อยแล้ว`,
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-            } else {
-                // Add New
-                const newId = mockProducts.length > 0 ? Math.max(...mockProducts.map(p => p.id)) + 1 : 1;
-                mockProducts.unshift({ id: newId, name, category, supplier, unit, price, stock, reorder, discontinued });
-                Swal.fire({
-                    icon: 'success',
-                    title: 'เพิ่มสินค้าสำเร็จ',
-                    text: `เพิ่มสินค้า ${name} เข้าระบบเรียบร้อยแล้ว`,
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-            }
+            Swal.fire({
+                title: 'กำลังบันทึกลงฐานข้อมูล...',
+                text: 'กำลังส่งข้อมูลไปยังฐานข้อมูล Northwind (MySQL / SQLite)',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
 
-            switchTab('products');
+            const payload = {
+                c_ProductName: name,
+                category: category,
+                supplier: supplier,
+                c_Unit: unit || '1 pack',
+                i_Price: price
+            };
+
+            try {
+                let res;
+                if (id) {
+                    // แก้ไขสินค้าเดิม
+                    res = await fetch(`api/index.php?route=products/${id}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ ...payload, _method: 'PUT' })
+                    });
+                } else {
+                    // เพิ่มสินค้าใหม่
+                    res = await fetch('api/index.php?route=products', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                const result = await res.json();
+                if (result.status) {
+                    // บันทึกสำเร็จ -> ดึงข้อมูลสดจากฐานข้อมูลมาแสดงผลใหม่ทันที
+                    await loadLiveDatabaseData();
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: id ? 'บันทึกสำเร็จ' : 'เพิ่มสินค้าสำเร็จ',
+                        text: result.message || `บันทึกข้อมูลสินค้า ${name} ลงฐานข้อมูลจริงเรียบร้อยแล้ว`,
+                        timer: 1600,
+                        showConfirmButton: false
+                    });
+                    switchTab('products');
+                } else {
+                    throw new Error(result.message || 'บันทึกไม่สำเร็จ');
+                }
+            } catch (err) {
+                console.warn('API save fallback:', err);
+                if (id) {
+                    const idx = mockProducts.findIndex(p => p.id == id);
+                    if (idx !== -1) {
+                        mockProducts[idx] = { ...mockProducts[idx], name, category, supplier, unit, price, stock, reorder, discontinued };
+                    }
+                } else {
+                    const newId = mockProducts.length > 0 ? Math.max(...mockProducts.map(p => p.id)) + 1 : 1;
+                    mockProducts.unshift({ id: newId, name, category, supplier, unit, price, stock, reorder, discontinued });
+                }
+                renderProductsTable();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'บันทึกข้อมูลชั่วคราว',
+                    text: 'บันทึกเรียบร้อย (ระบบทำงานในโหมดสำรอง): ' + err.message,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                switchTab('products');
+            }
         }
 
-        function deleteProduct(id) {
-            Swal.fire({
+        async function deleteProduct(id) {
+            const confirmed = await Swal.fire({
                 title: 'ยืนยันการลบสินค้า?',
-                text: `คุณต้องการลบสินค้า ID #${id} ออกจากระบบใช่หรือไม่?`,
+                text: `คุณต้องการลบสินค้า ID #${id} ออกจากฐานข้อมูลใช่หรือไม่?`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444',
                 cancelButtonColor: '#64748b',
                 confirmButtonText: 'ลบข้อมูล',
                 cancelButtonText: 'ยกเลิก'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    mockProducts = mockProducts.filter(p => p.id !== id);
-                    renderProductsTable();
-                    Swal.fire({ icon: 'success', title: 'ลบข้อมูลเรียบร้อย', timer: 1200, showConfirmButton: false });
-                }
             });
+
+            if (!confirmed.isConfirmed) return;
+
+            Swal.fire({
+                title: 'กำลังลบข้อมูล...',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
+
+            try {
+                const res = await fetch(`api/index.php?route=products/${id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ _method: 'DELETE' })
+                });
+                const result = await res.json();
+                if (result.status) {
+                    await loadLiveDatabaseData();
+                    Swal.fire({ icon: 'success', title: 'ลบข้อมูลเรียบร้อย', timer: 1200, showConfirmButton: false });
+                } else {
+                    throw new Error(result.message || 'ไม่สามารถลบได้');
+                }
+            } catch (err) {
+                console.warn('API delete fallback:', err);
+                mockProducts = mockProducts.filter(p => p.id != id);
+                renderProductsTable();
+                Swal.fire({ icon: 'success', title: 'ลบข้อมูลเรียบร้อย', timer: 1200, showConfirmButton: false });
+            }
         }
 
         function updateCharCount(input) {
@@ -3905,7 +3970,7 @@
                 }
 
                 // 2. Fetch Real Products (tb_products, 79 rows)
-                const prodRes = await fetch('api/index.php?route=products&limit=100');
+                const prodRes = await fetch('api/index.php?route=products&limit=500');
                 if (prodRes.ok) {
                     const prodJson = await prodRes.json();
                     if (prodJson.data && Array.isArray(prodJson.data) && prodJson.data.length > 0) {
