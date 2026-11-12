@@ -649,6 +649,7 @@
         /* Topbar Clean Layout & Proportions */
         #topbar {
             height: var(--topbar-height);
+            min-height: var(--topbar-height);
             background-color: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
             display: flex;
@@ -660,12 +661,50 @@
             z-index: 999;
             backdrop-filter: blur(14px);
             gap: 0.75rem;
+            overflow: hidden;
+        }
+
+        .topbar-left-section {
+            min-width: 0;
+            flex-shrink: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            overflow: hidden;
+        }
+
+        .topbar-title-group {
+            min-width: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #page-title {
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            line-height: 1.25 !important;
+            font-size: clamp(0.92rem, 1.15vw, 1.15rem) !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        #page-breadcrumb {
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            font-size: 0.72rem !important;
+            line-height: 1.2 !important;
+            margin: 0 !important;
+            padding-top: 1px !important;
         }
 
         .topbar-actions {
             display: flex;
             align-items: center;
-            gap: 0.45rem;
+            gap: 0.38rem;
             flex-shrink: 0;
             margin-left: auto;
         }
@@ -969,13 +1008,13 @@
             
             <!-- TOP NAVBAR -->
             <header id="topbar">
-                <div class="d-flex align-items-center gap-2">
-                    <button class="btn btn-sm btn-light border" onclick="toggleSidebar()" title="เปิด/ปิด เมนูด้านข้าง">
+                <div class="topbar-left-section">
+                    <button class="btn btn-sm btn-light border flex-shrink-0" onclick="toggleSidebar()" title="เปิด/ปิด เมนูด้านข้าง" style="width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
                         <i class="fa-solid fa-bars"></i>
                     </button>
-                    <div>
+                    <div class="topbar-title-group">
                         <h5 class="mb-0 fw-bold" id="page-title">แดชบอร์ดภาพรวม (Dashboard)</h5>
-                        <div class="small text-muted d-none d-md-block" id="page-breadcrumb" style="font-size: 0.75rem;">Northwind BMS › ภาพรวมระบบ › แดชบอร์ด</div>
+                        <div class="small text-muted d-none d-sm-block" id="page-breadcrumb">Northwind BMS › ภาพรวมระบบ › แดชบอร์ด</div>
                     </div>
                 </div>
                 
@@ -3973,7 +4012,8 @@
 
                             const livePill = document.getElementById('db-live-status-pill');
                             if (livePill) {
-                                livePill.innerHTML = '<i class="fa-solid fa-database text-success me-1"></i> MySQL Live: ' + kpis.total_products + ' สินค้า · ' + kpis.total_orders + ' ออร์เดอร์';
+                                livePill.innerHTML = '<i class="fa-solid fa-circle-check text-success me-1"></i> Hosting: Live Online';
+                                livePill.title = 'MySQL Live: ' + kpis.total_products + ' สินค้า · ' + kpis.total_orders + ' ออร์เดอร์ (เชื่อมต่อฐานข้อมูลจริง)';
                             }
                         }
 
